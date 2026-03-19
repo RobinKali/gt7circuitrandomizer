@@ -1,0 +1,222 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+
+  <!-- ── Primary SEO ─────────────────────────────────────────────────────── -->
+  <title>GT7 Random Circuit Selector</title>
+  <meta name="description"
+    content="Can't decide where to race in Gran Turismo 7? Use this random track selector to pick your next circuit by length (Short, Medium, Long)." />
+  <meta name="robots" content="index, follow" />
+  <link rel="canonical" href="https://yourdomain.com/" />
+
+  <!-- ── Open Graph ──────────────────────────────────────────────────────── -->
+  <meta property="og:type" content="website" />
+  <meta property="og:url" content="https://yourdomain.com/" />
+  <meta property="og:title" content="GT7 Random Circuit Selector" />
+  <meta property="og:description"
+    content="Can't decide where to race in Gran Turismo 7? Use this random track selector to pick your next circuit by length (Short, Medium, Long)." />
+  <meta property="og:image" content="https://via.placeholder.com/1200x630?text=GT7+Randomizer" />
+
+  <!-- ── Twitter Card ────────────────────────────────────────────────────── -->
+  <meta name="twitter:card" content="summary_large_image" />
+  <meta name="twitter:title" content="GT7 Random Circuit Selector" />
+  <meta name="twitter:description"
+    content="Can't decide where to race in Gran Turismo 7? Use this random track selector to pick your next circuit by length (Short, Medium, Long)." />
+  <meta name="twitter:image" content="https://via.placeholder.com/1200x630?text=GT7+Randomizer" />
+
+  <!-- ── PWA / Theme ─────────────────────────────────────────────────────── -->
+  <meta name="theme-color" content="#0066cc" />
+  <meta name="apple-mobile-web-app-capable" content="yes" />
+  <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent" />
+  <meta name="apple-mobile-web-app-title" content="GT7 Randomizer" />
+  <link rel="manifest" href="manifest.json" />
+  <link rel="apple-touch-icon" href="icons/icon-192.png" />
+
+  <!-- ── Favicon ─────────────────────────────────────────────────────────── -->
+  <link rel="icon" type="image/png" sizes="192x192" href="icons/icon-192.png" />
+
+  <!-- ── Styles ──────────────────────────────────────────────────────────── -->
+  <link rel="stylesheet" href="styles.css" />
+
+  <!-- ── Preconnect for Google Fonts (perf) ─────────────────────────────── -->
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+</head>
+
+<body>
+
+  <!-- ══════════════════════════════════════════════════════════════════════
+       HEADER
+  ═══════════════════════════════════════════════════════════════════════ -->
+  <header role="banner">
+    <div class="logo-mark" aria-hidden="true">
+      <div class="logo-stripe"></div>
+      <div class="logo-stripe"></div>
+      <div class="logo-stripe"></div>
+    </div>
+    <h1 class="site-title">GT7 <span>Circuit</span> Randomizer</h1>
+    <p class="site-subtitle">Gran Turismo 7 · Random Track Selector</p>
+  </header>
+
+  <!-- ══════════════════════════════════════════════════════════════════════
+       MAIN APP
+  ═══════════════════════════════════════════════════════════════════════ -->
+  <main role="main">
+    <div class="page-wrapper">
+
+      <!-- ── PWA Install Banner ──────────────────────────────────────────── -->
+      <div class="install-banner" id="install-banner" role="status" aria-live="polite">
+        <span>📲 <strong>Install App</strong><br />Add to your home screen for offline use.</span>
+        <button id="install-btn" type="button">Install</button>
+      </div>
+
+      <!-- ── Category Filter ────────────────────────────────────────────── -->
+      <section class="filter-section" aria-labelledby="filter-label">
+        <p class="section-label" id="filter-label">Filter by Length</p>
+        <div class="filter-group" role="group" aria-label="Circuit length categories">
+
+          <button class="filter-btn active" data-category="All" id="filter-all" type="button" aria-pressed="true">
+            <span class="btn-icon" aria-hidden="true">🌐</span>
+            <span class="btn-label">All</span>
+            <span class="btn-range">Any length</span>
+          </button>
+
+          <button class="filter-btn" data-category="Short" id="filter-short" type="button" aria-pressed="false">
+            <span class="btn-icon" aria-hidden="true">⚡</span>
+            <span class="btn-label">Short</span>
+            <span class="btn-range">&lt; 3.5 km</span>
+          </button>
+
+          <button class="filter-btn" data-category="Medium" id="filter-medium" type="button" aria-pressed="false">
+            <span class="btn-icon" aria-hidden="true">🏎️</span>
+            <span class="btn-label">Medium</span>
+            <span class="btn-range">3.5–5.5 km</span>
+          </button>
+
+          <button class="filter-btn" data-category="Long" id="filter-long" type="button" aria-pressed="false">
+            <span class="btn-icon" aria-hidden="true">🏁</span>
+            <span class="btn-label">Long</span>
+            <span class="btn-range">&gt; 5.5 km</span>
+          </button>
+
+        </div>
+      </section>
+
+      <!-- ── Options: Reverse Layouts ───────────────────────────────────── -->
+      <div class="options-row" role="group" aria-label="Randomizer options">
+        <label class="toggle-label" for="reverse-toggle">
+          <input type="checkbox" id="reverse-toggle" aria-describedby="reverse-desc" />
+          <span class="toggle-track" aria-hidden="true"></span>
+          <span class="toggle-text">
+            <strong>Include Reverse Layouts</strong>
+            <span id="reverse-desc">Doubles available circuits with reverse variants</span>
+          </span>
+        </label>
+        <div class="pool-badge" aria-live="polite" aria-atomic="true">
+          Pool: <strong id="pool-count">48</strong>
+        </div>
+      </div>
+
+      <!-- ── Roll Button ────────────────────────────────────────────────── -->
+      <section class="roll-section" aria-label="Randomizer">
+        <button id="roll-btn" type="button" aria-label="Roll a random circuit" aria-describedby="slot-display">
+          <span class="btn-dice" aria-hidden="true">🎲</span>
+          <span class="btn-text">Roll Circuit</span>
+        </button>
+      </section>
+
+      <!-- ── Slot Machine Display ───────────────────────────────────────── -->
+      <div aria-live="polite" aria-atomic="true">
+        <p id="slot-display" role="status"></p>
+      </div>
+
+      <!-- ── Empty State ────────────────────────────────────────────────── -->
+      <div id="empty-state" role="alert" aria-live="assertive">
+        <p>😅 No circuits match this filter. Try a different category.</p>
+      </div>
+
+      <!-- ── Result Card ────────────────────────────────────────────────── -->
+      <article id="result-card" aria-label="Selected circuit" aria-live="polite">
+        <div class="card-header">
+          <div class="card-header-dot" aria-hidden="true"></div>
+          <span class="card-header-label">Selected Circuit</span>
+        </div>
+        <div class="card-body">
+          <h2 id="track-name"></h2>
+          <p id="track-layout"></p>
+          <div class="card-stats">
+            <div class="stat-chip">
+              <span class="chip-label">Length</span>
+              <span class="chip-value" id="track-length">—</span>
+            </div>
+            <div class="stat-chip cat-chip">
+              <span class="chip-label">Category</span>
+              <span class="chip-value" id="track-category">—</span>
+            </div>
+          </div>
+        </div>
+      </article>
+
+    </div><!-- /.page-wrapper -->
+  </main>
+
+  <!-- ══════════════════════════════════════════════════════════════════════
+       FOOTER
+  ═══════════════════════════════════════════════════════════════════════ -->
+  <footer role="contentinfo">
+    <div class="footer-divider" aria-hidden="true"></div>
+    <p class="footer-text">
+      GT7 Random Circuit Selector &mdash; Fan-made tool.<br />
+      Gran Turismo 7 is a trademark of <a href="https://www.playstation.com/en-us/games/gran-turismo-7/" target="_blank"
+        rel="noopener noreferrer">Sony Interactive Entertainment &amp; Polyphony Digital</a>.<br />
+      Not affiliated with or endorsed by Sony or Polyphony Digital.
+    </p>
+  </footer>
+
+  <!-- ── App Script ──────────────────────────────────────────────────────── -->
+  <script src="app.js" defer></script>
+
+  <!-- ── PWA Install Prompt Handler ────────────────────────────────────── -->
+  <script>
+    (function () {
+      let deferredPrompt;
+      const banner = document.getElementById('install-banner');
+      const installBtn = document.getElementById('install-btn');
+
+      window.addEventListener('beforeinstallprompt', (e) => {
+        e.preventDefault();
+        deferredPrompt = e;
+        banner.classList.add('show');
+      });
+
+      installBtn.addEventListener('click', async () => {
+        if (!deferredPrompt) return;
+        deferredPrompt.prompt();
+        const { outcome } = await deferredPrompt.userChoice;
+        deferredPrompt = null;
+        banner.classList.remove('show');
+        console.log('[PWA] Install outcome:', outcome);
+      });
+
+      window.addEventListener('appinstalled', () => {
+        banner.classList.remove('show');
+        deferredPrompt = null;
+      });
+
+      // Sync aria-pressed on filter buttons
+      document.querySelectorAll('.filter-btn').forEach(btn => {
+        btn.addEventListener('click', () => {
+          document.querySelectorAll('.filter-btn').forEach(b => b.setAttribute('aria-pressed', 'false'));
+          btn.setAttribute('aria-pressed', 'true');
+        });
+      });
+    })();
+  </script>
+
+</body>
+
+</html>
