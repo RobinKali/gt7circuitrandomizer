@@ -63,105 +63,290 @@
   </header>
 
   <!-- ══════════════════════════════════════════════════════════════════════
+       NAV TABS
+  ═══════════════════════════════════════════════════════════════════════ -->
+  <nav class="main-nav" role="navigation" aria-label="Main navigation">
+    <button class="nav-tab active" id="nav-randomizer" type="button" aria-pressed="true">
+      <span class="nav-tab-icon" aria-hidden="true">🎲</span>
+      <span>Randomizer</span>
+    </button>
+    <button class="nav-tab" id="nav-seasons" type="button" aria-pressed="false">
+      <span class="nav-tab-icon" aria-hidden="true">🏆</span>
+      <span>Race Seasons</span>
+    </button>
+  </nav>
+
+  <!-- ══════════════════════════════════════════════════════════════════════
        MAIN APP
   ═══════════════════════════════════════════════════════════════════════ -->
   <main role="main">
-    <div class="page-wrapper">
 
-      <!-- ── PWA Install Banner ──────────────────────────────────────────── -->
-      <div class="install-banner" id="install-banner" role="status" aria-live="polite">
-        <span>📲 <strong>Install App</strong><br />Add to your home screen for offline use.</span>
-        <button id="install-btn" type="button">Install</button>
-      </div>
+    <!-- ─────────────────────────────────────────────────────────────────────
+         VIEW: STANDARD RANDOMIZER
+    ──────────────────────────────────────────────────────────────────────── -->
+    <div id="view-randomizer" class="view active">
+      <div class="page-wrapper">
 
-      <!-- ── Category Filter ────────────────────────────────────────────── -->
-      <section class="filter-section" aria-labelledby="filter-label">
-        <p class="section-label" id="filter-label">Filter by Length</p>
-        <div class="filter-group" role="group" aria-label="Circuit length categories">
-
-          <button class="filter-btn active" data-category="All" id="filter-all" type="button" aria-pressed="true">
-            <span class="btn-icon" aria-hidden="true">🌐</span>
-            <span class="btn-label">All</span>
-            <span class="btn-range">Any length</span>
-          </button>
-
-          <button class="filter-btn" data-category="Short" id="filter-short" type="button" aria-pressed="false">
-            <span class="btn-icon" aria-hidden="true">⚡</span>
-            <span class="btn-label">Short</span>
-            <span class="btn-range">&lt; 3.5 km</span>
-          </button>
-
-          <button class="filter-btn" data-category="Medium" id="filter-medium" type="button" aria-pressed="false">
-            <span class="btn-icon" aria-hidden="true">🏎️</span>
-            <span class="btn-label">Medium</span>
-            <span class="btn-range">3.5–5.5 km</span>
-          </button>
-
-          <button class="filter-btn" data-category="Long" id="filter-long" type="button" aria-pressed="false">
-            <span class="btn-icon" aria-hidden="true">🏁</span>
-            <span class="btn-label">Long</span>
-            <span class="btn-range">&gt; 5.5 km</span>
-          </button>
-
+        <!-- ── PWA Install Banner ──────────────────────────────────────────── -->
+        <div class="install-banner" id="install-banner" role="status" aria-live="polite">
+          <span>📲 <strong>Install App</strong><br />Add to your home screen for offline use.</span>
+          <button id="install-btn" type="button">Install</button>
         </div>
-      </section>
 
-      <!-- ── Options: Reverse Layouts ───────────────────────────────────── -->
-      <div class="options-row" role="group" aria-label="Randomizer options">
-        <label class="toggle-label" for="reverse-toggle">
-          <input type="checkbox" id="reverse-toggle" aria-describedby="reverse-desc" />
-          <span class="toggle-track" aria-hidden="true"></span>
-          <span class="toggle-text">
-            <strong>Include Reverse Layouts</strong>
-            <span id="reverse-desc">Doubles available circuits with reverse variants</span>
-          </span>
-        </label>
-        <div class="pool-badge" aria-live="polite" aria-atomic="true">
-          Pool: <strong id="pool-count">48</strong>
-        </div>
-      </div>
+        <!-- ── Category Filter ────────────────────────────────────────────── -->
+        <section class="filter-section" aria-labelledby="filter-label">
+          <p class="section-label" id="filter-label">Filter by Length</p>
+          <div class="filter-group" role="group" aria-label="Circuit length categories">
 
-      <!-- ── Roll Button ────────────────────────────────────────────────── -->
-      <section class="roll-section" aria-label="Randomizer">
-        <button id="roll-btn" type="button" aria-label="Roll a random circuit" aria-describedby="slot-display">
-          <span class="btn-dice" aria-hidden="true">🎲</span>
-          <span class="btn-text">Roll Circuit</span>
-        </button>
-      </section>
+            <button class="filter-btn active" data-category="All" id="filter-all" type="button" aria-pressed="true">
+              <span class="btn-icon" aria-hidden="true">🌐</span>
+              <span class="btn-label">All</span>
+              <span class="btn-range">Any length</span>
+            </button>
 
-      <!-- ── Slot Machine Display ───────────────────────────────────────── -->
-      <div aria-live="polite" aria-atomic="true">
-        <p id="slot-display" role="status"></p>
-      </div>
+            <button class="filter-btn" data-category="Short" id="filter-short" type="button" aria-pressed="false">
+              <span class="btn-icon" aria-hidden="true">⚡</span>
+              <span class="btn-label">Short</span>
+              <span class="btn-range">&lt; 3.5 km</span>
+            </button>
 
-      <!-- ── Empty State ────────────────────────────────────────────────── -->
-      <div id="empty-state" role="alert" aria-live="assertive">
-        <p>😅 No circuits match this filter. Try a different category.</p>
-      </div>
+            <button class="filter-btn" data-category="Medium" id="filter-medium" type="button" aria-pressed="false">
+              <span class="btn-icon" aria-hidden="true">🏎️</span>
+              <span class="btn-label">Medium</span>
+              <span class="btn-range">3.5–5.5 km</span>
+            </button>
 
-      <!-- ── Result Card ────────────────────────────────────────────────── -->
-      <article id="result-card" aria-label="Selected circuit" aria-live="polite">
-        <div class="card-header">
-          <div class="card-header-dot" aria-hidden="true"></div>
-          <span class="card-header-label">Selected Circuit</span>
-        </div>
-        <div class="card-body">
-          <h2 id="track-name"></h2>
-          <p id="track-layout"></p>
-          <div class="card-stats">
-            <div class="stat-chip">
-              <span class="chip-label">Length</span>
-              <span class="chip-value" id="track-length">—</span>
-            </div>
-            <div class="stat-chip cat-chip">
-              <span class="chip-label">Category</span>
-              <span class="chip-value" id="track-category">—</span>
-            </div>
+            <button class="filter-btn" data-category="Long" id="filter-long" type="button" aria-pressed="false">
+              <span class="btn-icon" aria-hidden="true">🏁</span>
+              <span class="btn-label">Long</span>
+              <span class="btn-range">&gt; 5.5 km</span>
+            </button>
+
+          </div>
+        </section>
+
+        <!-- ── Options: Reverse Layouts ───────────────────────────────────── -->
+        <div class="options-row" role="group" aria-label="Randomizer options">
+          <label class="toggle-label" for="reverse-toggle">
+            <input type="checkbox" id="reverse-toggle" aria-describedby="reverse-desc" />
+            <span class="toggle-track" aria-hidden="true"></span>
+            <span class="toggle-text">
+              <strong>Include Reverse Layouts</strong>
+              <span id="reverse-desc">Doubles available circuits with reverse variants</span>
+            </span>
+          </label>
+          <div class="pool-badge" aria-live="polite" aria-atomic="true">
+            Pool: <strong id="pool-count">48</strong>
           </div>
         </div>
-      </article>
 
-    </div><!-- /.page-wrapper -->
+        <!-- ── Roll Button ────────────────────────────────────────────────── -->
+        <section class="roll-section" aria-label="Randomizer">
+          <button id="roll-btn" type="button" aria-label="Roll a random circuit" aria-describedby="slot-display">
+            <span class="btn-dice" aria-hidden="true">🎲</span>
+            <span class="btn-text">Roll Circuit</span>
+          </button>
+        </section>
+
+        <!-- ── Slot Machine Display ───────────────────────────────────────── -->
+        <div aria-live="polite" aria-atomic="true">
+          <p id="slot-display" role="status"></p>
+        </div>
+
+        <!-- ── Empty State ────────────────────────────────────────────────── -->
+        <div id="empty-state" role="alert" aria-live="assertive">
+          <p>😅 No circuits match this filter. Try a different category.</p>
+        </div>
+
+        <!-- ── Result Card ────────────────────────────────────────────────── -->
+        <article id="result-card" aria-label="Selected circuit" aria-live="polite">
+          <div class="card-header">
+            <div class="card-header-dot" aria-hidden="true"></div>
+            <span class="card-header-label">Selected Circuit</span>
+          </div>
+          <div class="card-body">
+            <h2 id="track-name"></h2>
+            <p id="track-layout"></p>
+            <div class="card-stats">
+              <div class="stat-chip">
+                <span class="chip-label">Length</span>
+                <span class="chip-value" id="track-length">—</span>
+              </div>
+              <div class="stat-chip cat-chip">
+                <span class="chip-label">Category</span>
+                <span class="chip-value" id="track-category">—</span>
+              </div>
+            </div>
+          </div>
+        </article>
+
+      </div><!-- /.page-wrapper -->
+    </div><!-- /#view-randomizer -->
+
+    <!-- ─────────────────────────────────────────────────────────────────────
+         VIEW: SEASONS DASHBOARD
+    ──────────────────────────────────────────────────────────────────────── -->
+    <div id="view-seasons" class="view">
+      <div class="page-wrapper">
+
+        <div class="seasons-header">
+          <p class="section-label">Your Race Seasons</p>
+          <button class="btn-create-season" id="btn-open-create" type="button">
+            <span aria-hidden="true">＋</span> New Season
+          </button>
+        </div>
+
+        <!-- Season list -->
+        <div id="seasons-list" aria-label="Saved seasons" aria-live="polite">
+          <!-- populated by JS -->
+        </div>
+
+        <!-- Empty state for seasons dashboard -->
+        <div id="seasons-empty" class="seasons-empty-state" role="status">
+          <span class="seasons-empty-icon" aria-hidden="true">🏆</span>
+          <p>No seasons yet.</p>
+          <p class="seasons-empty-sub">Create your first race season to get started!</p>
+        </div>
+
+      </div>
+    </div><!-- /#view-seasons -->
+
+    <!-- ─────────────────────────────────────────────────────────────────────
+         VIEW: CREATE SEASON (step 1: name + count | step 2: pick tracks)
+    ──────────────────────────────────────────────────────────────────────── -->
+    <div id="view-create-season" class="view">
+      <div class="page-wrapper">
+
+        <!-- Step 1: Name & race count -->
+        <div id="create-step-1" class="create-step">
+          <button class="btn-back" id="btn-back-from-create" type="button">
+            ← Back to Seasons
+          </button>
+          <h2 class="create-title">New Race Season</h2>
+          <p class="create-subtitle">Set a name and decide how many races the season will have.</p>
+
+          <div class="form-group">
+            <label class="form-label" for="season-name-input">Season Name</label>
+            <input type="text" id="season-name-input" class="form-input"
+              placeholder="e.g. Spring Championship 2025" maxlength="50" autocomplete="off" />
+          </div>
+
+          <div class="form-group">
+            <label class="form-label" for="season-race-count-input">Number of Races</label>
+            <input type="number" id="season-race-count-input" class="form-input"
+              placeholder="e.g. 7" min="1" max="48" />
+          </div>
+
+          <button class="btn-primary" id="btn-go-to-step2" type="button">
+            Next: Pick Circuits →
+          </button>
+
+          <p id="create-step1-error" class="form-error" aria-live="assertive"></p>
+        </div>
+
+        <!-- Step 2: Pick tracks -->
+        <div id="create-step-2" class="create-step" style="display:none;">
+          <button class="btn-back" id="btn-back-to-step1" type="button">
+            ← Back
+          </button>
+          <h2 class="create-title" id="create-step2-title">Pick Circuits</h2>
+          <p class="create-subtitle" id="create-step2-subtitle">Select exactly the required number of circuits for this season.</p>
+
+          <div class="track-select-counter" aria-live="polite" aria-atomic="true">
+            Selected: <strong id="track-select-count">0</strong> / <strong id="track-select-target">0</strong>
+          </div>
+
+          <div id="track-select-list" class="track-select-list" role="group" aria-label="Available circuits">
+            <!-- populated by JS -->
+          </div>
+
+          <button class="btn-primary" id="btn-save-season" type="button" disabled>
+            🏆 Save Season
+          </button>
+
+          <p id="create-step2-error" class="form-error" aria-live="assertive"></p>
+        </div>
+
+      </div>
+    </div><!-- /#view-create-season -->
+
+    <!-- ─────────────────────────────────────────────────────────────────────
+         VIEW: SEASON DETAIL
+    ──────────────────────────────────────────────────────────────────────── -->
+    <div id="view-season-detail" class="view">
+      <div class="page-wrapper">
+
+        <button class="btn-back" id="btn-back-from-detail" type="button">
+          ← Back to Seasons
+        </button>
+
+        <div class="season-detail-header">
+          <h2 id="detail-season-name" class="detail-season-title"></h2>
+          <div class="detail-progress-bar-wrap">
+            <div class="detail-progress-bar" id="detail-progress-bar"></div>
+          </div>
+          <p class="detail-progress-label" id="detail-progress-label"></p>
+        </div>
+
+        <!-- Season Roll Button -->
+        <section class="roll-section" aria-label="Season Randomizer">
+          <button id="season-roll-btn" type="button" aria-label="Roll a random circuit from this season">
+            <span class="btn-dice" aria-hidden="true">🎲</span>
+            <span class="btn-text">Roll Circuit</span>
+          </button>
+        </section>
+
+        <!-- Slot display reused for season roll -->
+        <div aria-live="polite" aria-atomic="true">
+          <p id="season-slot-display" role="status"></p>
+        </div>
+
+        <!-- Season result card -->
+        <article id="season-result-card" aria-label="Season selected circuit" aria-live="polite">
+          <div class="card-header">
+            <div class="card-header-dot" aria-hidden="true"></div>
+            <span class="card-header-label">Selected Circuit</span>
+          </div>
+          <div class="card-body">
+            <h2 id="season-track-name"></h2>
+            <p id="season-track-layout"></p>
+            <div class="card-stats">
+              <div class="stat-chip">
+                <span class="chip-label">Length</span>
+                <span class="chip-value" id="season-track-length">—</span>
+              </div>
+              <div class="stat-chip cat-chip">
+                <span class="chip-label">Category</span>
+                <span class="chip-value" id="season-track-category">—</span>
+              </div>
+            </div>
+          </div>
+        </article>
+
+        <!-- Season empty state -->
+        <div id="season-empty-state" class="seasons-empty-state" role="status" style="display:none;">
+          <span class="seasons-empty-icon" aria-hidden="true">🏁</span>
+          <p>All circuits completed!</p>
+          <p class="seasons-empty-sub">This season is finished. Well done!</p>
+        </div>
+
+        <!-- Circuit list -->
+        <div class="season-circuits-section">
+          <p class="section-label">Season Circuits</p>
+          <ul id="season-circuits-list" class="season-circuits-list" aria-label="Season circuits">
+            <!-- populated by JS -->
+          </ul>
+        </div>
+
+        <!-- Danger zone -->
+        <div class="season-danger-zone">
+          <button class="btn-reset-season" id="btn-reset-season" type="button">↺ Reset Season</button>
+          <button class="btn-delete-season" id="btn-delete-season" type="button">🗑 Delete Season</button>
+        </div>
+
+      </div>
+    </div><!-- /#view-season-detail -->
+
   </main>
 
   <!-- ══════════════════════════════════════════════════════════════════════

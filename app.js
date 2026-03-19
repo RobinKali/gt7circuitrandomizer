@@ -1,5 +1,6 @@
 // ═══════════════════════════════════════════════════════════════════════════
 //  GT7 Random Circuit Selector — app.js
+//  Includes: Standard Randomizer + Race Seasons (localStorage)
 // ═══════════════════════════════════════════════════════════════════════════
 
 // ─── Circuit Database ────────────────────────────────────────────────────────
@@ -54,42 +55,35 @@ const CIRCUITS = [
   { name: "Watkins Glen", layout: "Short Course", length_km: 3.9, category: "Medium" }
 ];
 
+// ═══════════════════════════════════════════════════════════════════════════
+//  STANDARD RANDOMIZER
+// ═══════════════════════════════════════════════════════════════════════════
+
 // ─── State ───────────────────────────────────────────────────────────────────
 let activeCategory = 'All';
 let isAnimating = false;
 
 // ─── DOM References ──────────────────────────────────────────────────────────
-const filterBtns      = document.querySelectorAll('.filter-btn');
-const rollBtn         = document.getElementById('roll-btn');
-const resultCard      = document.getElementById('result-card');
-const slotDisplay     = document.getElementById('slot-display');
-const trackName       = document.getElementById('track-name');
-const trackLayout     = document.getElementById('track-layout');
-const trackLength     = document.getElementById('track-length');
-const trackCategory   = document.getElementById('track-category');
-const reverseToggle   = document.getElementById('reverse-toggle');
-const poolCount       = document.getElementById('pool-count');
-const emptyState      = document.getElementById('empty-state');
+const filterBtns    = document.querySelectorAll('.filter-btn');
+const rollBtn       = document.getElementById('roll-btn');
+const resultCard    = document.getElementById('result-card');
+const slotDisplay   = document.getElementById('slot-display');
+const trackName     = document.getElementById('track-name');
+const trackLayout   = document.getElementById('track-layout');
+const trackLength   = document.getElementById('track-length');
+const trackCategory = document.getElementById('track-category');
+const reverseToggle = document.getElementById('reverse-toggle');
+const poolCount     = document.getElementById('pool-count');
+const emptyState    = document.getElementById('empty-state');
 
 // ─── Helpers ─────────────────────────────────────────────────────────────────
 function getFilteredPool() {
   let pool = [...CIRCUITS];
-
-  // Category filter
-  if (activeCategory !== 'All') {
-    pool = pool.filter(c => c.category === activeCategory);
-  }
-
-  // Add reverse variants if toggled
+  if (activeCategory !== 'All') pool = pool.filter(c => c.category === activeCategory);
   if (reverseToggle && reverseToggle.checked) {
-    const reverseVariants = pool.map(c => ({
-      ...c,
-      layout: c.layout + ' (Reverse)',
-      isReverse: true
-    }));
-    pool = [...pool, ...reverseVariants];
+    const rev = pool.map(c => ({ ...c, layout: c.layout + ' (Reverse)', isReverse: true }));
+    pool = [...pool, ...rev];
   }
-
   return pool;
 }
 
@@ -103,8 +97,7 @@ function getCategoryColor(cat) {
 }
 
 function updatePoolCount() {
-  const pool = getFilteredPool();
-  if (poolCount) poolCount.textContent = pool.length;
+  if (poolCount) poolCount.textContent = getFilteredPool().length;
 }
 
 // ─── Category Filter ──────────────────────────────────────────────────────────
@@ -115,67 +108,49 @@ filterBtns.forEach(btn => {
     btn.classList.add('active');
     activeCategory = btn.dataset.category;
     updatePoolCount();
-    // Reset result card on filter change
     resultCard.classList.remove('visible');
     slotDisplay.classList.remove('visible');
   });
 });
 
 // ─── Slot Machine Animation ───────────────────────────────────────────────────
-function runSlotAnimation(finalCircuit, pool) {
+function runSlotAnimation(finalCircuit, pool, slotEl) {
   return new Promise(resolve => {
-    slotDisplay.classList.add('visible');
-    resultCard.classList.remove('visible');
+    slotEl.classList.add('visible');
 
-    const DURATION   = 1500; // ms
-    const START_INTERVAL = 50;
-    const END_INTERVAL   = 160;
-    const start = performance.now();
-
-    let rafId;
+    const DURATION      = 1500;
+    const START_INT     = 50;
+    const END_INT       = 160;
+    const start         = performance.now();
 
     function tick(now) {
       const elapsed  = now - start;
       const progress = Math.min(elapsed / DURATION, 1);
-
-      // Ease-out: slow down as progress → 1
-      const interval = START_INTERVAL + (END_INTERVAL - START_INTERVAL) * (progress ** 2);
+      const interval = START_INT + (END_INT - START_INT) * (progress ** 2);
 
       if (progress < 1) {
-        // Show a random circuit name during the spin
         const random = pickRandom(pool);
-        slotDisplay.textContent = `${random.name} — ${random.layout}`;
-        slotDisplay.style.color = getCategoryColor(random.category);
-
-        setTimeout(() => {
-          rafId = requestAnimationFrame(tick);
-        }, interval);
+        slotEl.textContent = `${random.name} — ${random.layout}`;
+        slotEl.style.color  = getCategoryColor(random.category);
+        setTimeout(() => requestAnimationFrame(tick), interval);
       } else {
-        // Final reveal
-        slotDisplay.textContent = `${finalCircuit.name} — ${finalCircuit.layout}`;
-        slotDisplay.style.color = getCategoryColor(finalCircuit.category);
-
+        slotEl.textContent = `${finalCircuit.name} — ${finalCircuit.layout}`;
+        slotEl.style.color  = getCategoryColor(finalCircuit.category);
         setTimeout(() => {
-          slotDisplay.classList.remove('visible');
+          slotEl.classList.remove('visible');
           resolve();
         }, 200);
       }
     }
-
-    rafId = requestAnimationFrame(tick);
+    requestAnimationFrame(tick);
   });
 }
 
 // ─── Roll Logic ───────────────────────────────────────────────────────────────
 rollBtn.addEventListener('click', async () => {
   if (isAnimating) return;
-
   const pool = getFilteredPool();
-
-  if (pool.length === 0) {
-    emptyState && (emptyState.style.display = 'block');
-    return;
-  }
+  if (pool.length === 0) { emptyState && (emptyState.style.display = 'block'); return; }
   emptyState && (emptyState.style.display = 'none');
 
   isAnimating = true;
@@ -183,30 +158,23 @@ rollBtn.addEventListener('click', async () => {
   rollBtn.classList.add('rolling');
 
   const chosen = pickRandom(pool);
+  await runSlotAnimation(chosen, pool, slotDisplay);
 
-  await runSlotAnimation(chosen, pool);
-
-  // Populate result card
-  trackName.textContent     = chosen.name + (chosen.isReverse ? '' : '');
+  trackName.textContent     = chosen.name;
   trackLayout.textContent   = chosen.layout;
   trackLength.textContent   = chosen.length_km.toFixed(1) + ' km';
   trackCategory.textContent = chosen.category;
 
-  // Color-code the category badge
   const catEl = document.getElementById('track-category');
   catEl.style.setProperty('--cat-color', getCategoryColor(chosen.category));
 
   resultCard.classList.add('visible');
-
   isAnimating = false;
   rollBtn.disabled = false;
   rollBtn.classList.remove('rolling');
 });
 
-// ─── Reverse toggle updates pool count ───────────────────────────────────────
 reverseToggle && reverseToggle.addEventListener('change', updatePoolCount);
-
-// ─── Init ─────────────────────────────────────────────────────────────────────
 updatePoolCount();
 
 // ─── Service Worker Registration ─────────────────────────────────────────────
@@ -216,4 +184,455 @@ if ('serviceWorker' in navigator) {
       .then(reg => console.log('[SW] Registered, scope:', reg.scope))
       .catch(err => console.warn('[SW] Registration failed:', err));
   });
+}
+
+// ═══════════════════════════════════════════════════════════════════════════
+//  RACE SEASONS — localStorage Data Model
+// ═══════════════════════════════════════════════════════════════════════════
+
+const LS_KEY = 'gt7_race_seasons';
+
+/** Load all seasons from localStorage */
+function loadSeasons() {
+  try {
+    return JSON.parse(localStorage.getItem(LS_KEY)) || [];
+  } catch {
+    return [];
+  }
+}
+
+/** Save all seasons to localStorage */
+function saveSeasons(seasons) {
+  localStorage.setItem(LS_KEY, JSON.stringify(seasons));
+}
+
+/**
+ * Season schema:
+ * {
+ *   id: string (uuid-ish),
+ *   name: string,
+ *   raceCount: number,
+ *   circuits: [{ name, layout, length_km, category, completed }]
+ * }
+ */
+function createSeasonObj(name, raceCount, selectedCircuits) {
+  return {
+    id: Date.now().toString(36) + Math.random().toString(36).slice(2, 6),
+    name: name.trim(),
+    raceCount,
+    circuits: selectedCircuits.map(c => ({ ...c, completed: false }))
+  };
+}
+
+// ═══════════════════════════════════════════════════════════════════════════
+//  VIEW ROUTER
+// ═══════════════════════════════════════════════════════════════════════════
+
+const views = {
+  randomizer:    document.getElementById('view-randomizer'),
+  seasons:       document.getElementById('view-seasons'),
+  createSeason:  document.getElementById('view-create-season'),
+  seasonDetail:  document.getElementById('view-season-detail'),
+};
+
+function showView(name) {
+  Object.values(views).forEach(v => v && v.classList.remove('active'));
+  if (views[name]) views[name].classList.add('active');
+}
+
+// ─── Nav Tabs ─────────────────────────────────────────────────────────────────
+const navRandomizer = document.getElementById('nav-randomizer');
+const navSeasons    = document.getElementById('nav-seasons');
+
+navRandomizer.addEventListener('click', () => {
+  navRandomizer.setAttribute('aria-pressed', 'true');
+  navSeasons.setAttribute('aria-pressed', 'false');
+  navRandomizer.classList.add('active');
+  navSeasons.classList.remove('active');
+  showView('randomizer');
+});
+
+navSeasons.addEventListener('click', () => {
+  navSeasons.setAttribute('aria-pressed', 'true');
+  navRandomizer.setAttribute('aria-pressed', 'false');
+  navSeasons.classList.add('active');
+  navRandomizer.classList.remove('active');
+  showView('seasons');
+  renderSeasonsDashboard();
+});
+
+// ═══════════════════════════════════════════════════════════════════════════
+//  SEASONS DASHBOARD
+// ═══════════════════════════════════════════════════════════════════════════
+
+const seasonsList  = document.getElementById('seasons-list');
+const seasonsEmpty = document.getElementById('seasons-empty');
+const btnOpenCreate = document.getElementById('btn-open-create');
+
+btnOpenCreate.addEventListener('click', () => {
+  openCreateFlow();
+});
+
+function renderSeasonsDashboard() {
+  const seasons = loadSeasons();
+
+  seasonsList.innerHTML = '';
+
+  if (seasons.length === 0) {
+    seasonsEmpty.style.display = 'block';
+    return;
+  }
+  seasonsEmpty.style.display = 'none';
+
+  seasons.forEach(season => {
+    const completed = season.circuits.filter(c => c.completed).length;
+    const total     = season.circuits.length;
+    const pct       = total > 0 ? Math.round((completed / total) * 100) : 0;
+
+    const card = document.createElement('div');
+    card.className = 'season-card';
+    card.setAttribute('role', 'button');
+    card.setAttribute('tabindex', '0');
+    card.setAttribute('aria-label', `Open season: ${season.name}`);
+    card.innerHTML = `
+      <div class="season-card-info">
+        <div class="season-card-name">${escHtml(season.name)}</div>
+        <div class="season-card-meta">${total} circuits · ${completed} completed</div>
+      </div>
+      <div class="season-card-progress">
+        <span class="season-card-pct">${pct}%</span>
+        <div class="season-mini-bar-wrap">
+          <div class="season-mini-bar" style="width:${pct}%"></div>
+        </div>
+      </div>
+      <span class="season-card-arrow" aria-hidden="true">›</span>
+    `;
+    card.addEventListener('click', () => openSeasonDetail(season.id));
+    card.addEventListener('keydown', e => { if (e.key === 'Enter' || e.key === ' ') openSeasonDetail(season.id); });
+    seasonsList.appendChild(card);
+  });
+}
+
+// ═══════════════════════════════════════════════════════════════════════════
+//  CREATE SEASON FLOW
+// ═══════════════════════════════════════════════════════════════════════════
+
+const createStep1 = document.getElementById('create-step-1');
+const createStep2 = document.getElementById('create-step-2');
+const seasonNameInput      = document.getElementById('season-name-input');
+const seasonRaceCountInput = document.getElementById('season-race-count-input');
+const btnGoToStep2         = document.getElementById('btn-go-to-step2');
+const btnBackFromCreate    = document.getElementById('btn-back-from-create');
+const btnBackToStep1       = document.getElementById('btn-back-to-step1');
+const btnSaveSeason        = document.getElementById('btn-save-season');
+const trackSelectList      = document.getElementById('track-select-list');
+const trackSelectCount     = document.getElementById('track-select-count');
+const trackSelectTarget    = document.getElementById('track-select-target');
+const createStep1Error     = document.getElementById('create-step1-error');
+const createStep2Error     = document.getElementById('create-step2-error');
+const createStep2Title     = document.getElementById('create-step2-title');
+
+let createTargetCount = 0;
+let createSelectedIds = new Set(); // indices into CIRCUITS
+
+function openCreateFlow() {
+  // Reset form
+  seasonNameInput.value       = '';
+  seasonRaceCountInput.value  = '';
+  createStep1Error.textContent = '';
+  createStep2Error.textContent = '';
+  createStep1.style.display   = 'flex';
+  createStep2.style.display   = 'none';
+  createSelectedIds.clear();
+  showView('createSeason');
+}
+
+btnBackFromCreate.addEventListener('click', () => {
+  showView('seasons');
+  renderSeasonsDashboard();
+});
+
+btnBackToStep1.addEventListener('click', () => {
+  createStep2.style.display = 'none';
+  createStep1.style.display = 'flex';
+});
+
+btnGoToStep2.addEventListener('click', () => {
+  const name  = seasonNameInput.value.trim();
+  const count = parseInt(seasonRaceCountInput.value, 10);
+
+  createStep1Error.textContent = '';
+
+  if (!name) {
+    createStep1Error.textContent = '⚠ Please enter a season name.';
+    return;
+  }
+  if (!count || count < 1 || count > CIRCUITS.length) {
+    createStep1Error.textContent = `⚠ Number of races must be between 1 and ${CIRCUITS.length}.`;
+    return;
+  }
+
+  createTargetCount = count;
+  createSelectedIds.clear();
+
+  createStep2Title.textContent = `Pick ${count} Circuit${count !== 1 ? 's' : ''}`;
+  trackSelectTarget.textContent = count;
+  trackSelectCount.textContent  = 0;
+  btnSaveSeason.disabled = true;
+  createStep2Error.textContent  = '';
+
+  renderTrackSelectList();
+
+  createStep1.style.display = 'none';
+  createStep2.style.display = 'flex';
+});
+
+function renderTrackSelectList() {
+  trackSelectList.innerHTML = '';
+
+  CIRCUITS.forEach((circuit, idx) => {
+    const isSelected = createSelectedIds.has(idx);
+    const isMaxed    = !isSelected && createSelectedIds.size >= createTargetCount;
+
+    const item = document.createElement('div');
+    item.className = 'track-select-item' +
+      (isSelected ? ' selected' : '') +
+      (isMaxed    ? ' disabled-max' : '');
+    item.setAttribute('role', 'checkbox');
+    item.setAttribute('aria-checked', isSelected ? 'true' : 'false');
+    item.setAttribute('tabindex', isMaxed && !isSelected ? '-1' : '0');
+    item.dataset.idx = idx;
+
+    item.innerHTML = `
+      <div class="track-select-check" aria-hidden="true">${isSelected ? '✓' : ''}</div>
+      <div class="track-select-info">
+        <div class="track-select-name">${escHtml(circuit.name)}</div>
+        <div class="track-select-layout">${escHtml(circuit.layout)}</div>
+      </div>
+      <span class="track-select-cat ${circuit.category}">${circuit.category}</span>
+    `;
+
+    item.addEventListener('click', () => toggleTrackSelection(idx));
+    item.addEventListener('keydown', e => {
+      if (e.key === 'Enter' || e.key === ' ') { e.preventDefault(); toggleTrackSelection(idx); }
+    });
+
+    trackSelectList.appendChild(item);
+  });
+}
+
+function toggleTrackSelection(idx) {
+  if (createSelectedIds.has(idx)) {
+    createSelectedIds.delete(idx);
+  } else {
+    if (createSelectedIds.size >= createTargetCount) return; // max reached
+    createSelectedIds.add(idx);
+  }
+  trackSelectCount.textContent = createSelectedIds.size;
+  btnSaveSeason.disabled = createSelectedIds.size !== createTargetCount;
+  renderTrackSelectList(); // re-render to update disabled states
+}
+
+btnSaveSeason.addEventListener('click', () => {
+  if (createSelectedIds.size !== createTargetCount) {
+    createStep2Error.textContent = `⚠ Please select exactly ${createTargetCount} circuits.`;
+    return;
+  }
+
+  const name      = seasonNameInput.value.trim();
+  const selected  = [...createSelectedIds].map(i => CIRCUITS[i]);
+  const season    = createSeasonObj(name, createTargetCount, selected);
+
+  const seasons = loadSeasons();
+  seasons.push(season);
+  saveSeasons(seasons);
+
+  showView('seasons');
+  renderSeasonsDashboard();
+
+  // Switch nav tab to seasons
+  navSeasons.classList.add('active');
+  navRandomizer.classList.remove('active');
+  navSeasons.setAttribute('aria-pressed', 'true');
+  navRandomizer.setAttribute('aria-pressed', 'false');
+});
+
+// ═══════════════════════════════════════════════════════════════════════════
+//  SEASON DETAIL VIEW
+// ═══════════════════════════════════════════════════════════════════════════
+
+const detailSeasonName    = document.getElementById('detail-season-name');
+const detailProgressBar   = document.getElementById('detail-progress-bar');
+const detailProgressLabel = document.getElementById('detail-progress-label');
+const seasonCircuitsList  = document.getElementById('season-circuits-list');
+const seasonRollBtn       = document.getElementById('season-roll-btn');
+const seasonSlotDisplay   = document.getElementById('season-slot-display');
+const seasonResultCard    = document.getElementById('season-result-card');
+const seasonTrackName     = document.getElementById('season-track-name');
+const seasonTrackLayout   = document.getElementById('season-track-layout');
+const seasonTrackLength   = document.getElementById('season-track-length');
+const seasonTrackCategory = document.getElementById('season-track-category');
+const seasonEmptyState    = document.getElementById('season-empty-state');
+const btnBackFromDetail   = document.getElementById('btn-back-from-detail');
+const btnResetSeason      = document.getElementById('btn-reset-season');
+const btnDeleteSeason     = document.getElementById('btn-delete-season');
+
+let currentSeasonId = null;
+let isSeasonAnimating = false;
+
+btnBackFromDetail.addEventListener('click', () => {
+  currentSeasonId = null;
+  seasonResultCard.classList.remove('visible');
+  seasonSlotDisplay.classList.remove('visible');
+  showView('seasons');
+  renderSeasonsDashboard();
+});
+
+function openSeasonDetail(seasonId) {
+  currentSeasonId = seasonId;
+  seasonResultCard.classList.remove('visible');
+  seasonSlotDisplay.classList.remove('visible');
+  renderSeasonDetail();
+  showView('seasonDetail');
+}
+
+function renderSeasonDetail() {
+  const seasons = loadSeasons();
+  const season  = seasons.find(s => s.id === currentSeasonId);
+  if (!season) { showView('seasons'); return; }
+
+  const completed = season.circuits.filter(c => c.completed).length;
+  const total     = season.circuits.length;
+  const pct       = total > 0 ? Math.round((completed / total) * 100) : 0;
+  const remaining = total - completed;
+
+  detailSeasonName.textContent    = season.name;
+  detailProgressBar.style.width   = `${pct}%`;
+  detailProgressLabel.textContent = `${completed} / ${total} completed (${pct}%)`;
+
+  // Roll button state
+  const hasRemaining = remaining > 0;
+  seasonRollBtn.disabled = !hasRemaining || isSeasonAnimating;
+
+  // Empty state
+  seasonEmptyState.style.display = hasRemaining ? 'none' : 'block';
+
+  // Build circuit list
+  seasonCircuitsList.innerHTML = '';
+  season.circuits.forEach((circuit, idx) => {
+    const li = document.createElement('li');
+    li.className = 'season-circuit-item' + (circuit.completed ? ' completed' : '');
+
+    const btn = document.createElement('button');
+    btn.className = 'circuit-complete-btn';
+    btn.type = 'button';
+    btn.setAttribute('aria-label', circuit.completed
+      ? `Mark ${circuit.name} as incomplete`
+      : `Mark ${circuit.name} as complete`);
+    btn.innerHTML = circuit.completed ? '✓' : '';
+    btn.addEventListener('click', () => toggleCircuitComplete(idx));
+
+    const info = document.createElement('div');
+    info.className = 'circuit-item-info';
+    info.innerHTML = `
+      <div class="circuit-item-name">${escHtml(circuit.name)}</div>
+      <div class="circuit-item-layout">${escHtml(circuit.layout)}</div>
+    `;
+
+    const badge = document.createElement('span');
+    badge.className = `circuit-item-badge ${circuit.category}`;
+    badge.textContent = circuit.category;
+
+    li.appendChild(btn);
+    li.appendChild(info);
+    li.appendChild(badge);
+    seasonCircuitsList.appendChild(li);
+  });
+}
+
+function toggleCircuitComplete(circuitIdx) {
+  const seasons = loadSeasons();
+  const season  = seasons.find(s => s.id === currentSeasonId);
+  if (!season) return;
+
+  season.circuits[circuitIdx].completed = !season.circuits[circuitIdx].completed;
+  saveSeasons(seasons);
+  renderSeasonDetail();
+}
+
+// ─── Season Roll ──────────────────────────────────────────────────────────────
+seasonRollBtn.addEventListener('click', async () => {
+  if (isSeasonAnimating) return;
+
+  const seasons = loadSeasons();
+  const season  = seasons.find(s => s.id === currentSeasonId);
+  if (!season) return;
+
+  const remaining = season.circuits.filter(c => !c.completed);
+  if (remaining.length === 0) return;
+
+  isSeasonAnimating = true;
+  seasonRollBtn.disabled = true;
+  seasonRollBtn.classList.add('rolling');
+
+  const chosen = pickRandom(remaining);
+
+  await runSlotAnimation(chosen, remaining.length > 1 ? remaining : CIRCUITS, seasonSlotDisplay);
+
+  // Mark as completed in data
+  const idx = season.circuits.findIndex(c => c.name === chosen.name && c.layout === chosen.layout && !c.completed);
+  if (idx !== -1) {
+    season.circuits[idx].completed = true;
+    saveSeasons(seasons);
+  }
+
+  // Show result card
+  seasonTrackName.textContent     = chosen.name;
+  seasonTrackLayout.textContent   = chosen.layout;
+  seasonTrackLength.textContent   = chosen.length_km.toFixed(1) + ' km';
+  seasonTrackCategory.textContent = chosen.category;
+
+  const seasonCatEl = document.getElementById('season-track-category');
+  seasonCatEl.style.setProperty('--cat-color', getCategoryColor(chosen.category));
+
+  seasonResultCard.classList.add('visible');
+
+  isSeasonAnimating = false;
+  renderSeasonDetail(); // refresh list + progress
+});
+
+// ─── Reset Season ─────────────────────────────────────────────────────────────
+btnResetSeason.addEventListener('click', () => {
+  if (!confirm('Reset all circuits in this season? Progress will be lost.')) return;
+  const seasons = loadSeasons();
+  const season  = seasons.find(s => s.id === currentSeasonId);
+  if (!season) return;
+  season.circuits.forEach(c => c.completed = false);
+  saveSeasons(seasons);
+  seasonResultCard.classList.remove('visible');
+  seasonSlotDisplay.classList.remove('visible');
+  renderSeasonDetail();
+});
+
+// ─── Delete Season ────────────────────────────────────────────────────────────
+btnDeleteSeason.addEventListener('click', () => {
+  if (!confirm('Delete this season permanently? This cannot be undone.')) return;
+  const seasons = loadSeasons().filter(s => s.id !== currentSeasonId);
+  saveSeasons(seasons);
+  currentSeasonId = null;
+  showView('seasons');
+  renderSeasonsDashboard();
+  navSeasons.classList.add('active');
+  navRandomizer.classList.remove('active');
+});
+
+// ═══════════════════════════════════════════════════════════════════════════
+//  UTILITIES
+// ═══════════════════════════════════════════════════════════════════════════
+function escHtml(str) {
+  return String(str)
+    .replace(/&/g, '&amp;')
+    .replace(/</g, '&lt;')
+    .replace(/>/g, '&gt;')
+    .replace(/"/g, '&quot;');
 }
