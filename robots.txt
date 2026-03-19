@@ -1,0 +1,5 @@
+# https://gt7tracks.robinkali.nl robots.txt
+User-agent: *
+Allow: /
+
+Sitemap: https://gt7tracks.robinkali.nl/sitemap.xml

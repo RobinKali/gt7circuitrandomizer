@@ -7,43 +7,45 @@
   <meta http-equiv="X-UA-Compatible" content="IE=edge" />
 
   <!-- ── Primary SEO ─────────────────────────────────────────────────────── -->
-  <title>GT7 Random Circuit Selector</title>
+  <title>GTTraxx — GT7 Random Circuit Selector</title>
   <meta name="description"
-    content="Can't decide where to race in Gran Turismo 7? Use this random track selector to pick your next circuit by length (Short, Medium, Long)." />
+    content="Can't decide where to race in Gran Turismo 7? Use GTTraxx to pick your next circuit by length or layout." />
   <meta name="robots" content="index, follow" />
   <link rel="canonical" href="https://gt7tracks.robinkali.nl/" />
 
   <!-- ── Open Graph ──────────────────────────────────────────────────────── -->
   <meta property="og:type" content="website" />
   <meta property="og:url" content="https://gt7tracks.robinkali.nl/" />
-  <meta property="og:title" content="GT7 Random Circuit Selector" />
+  <meta property="og:title" content="GTTraxx — GT7 Random Track Selector" />
   <meta property="og:description"
-    content="Can't decide where to race in Gran Turismo 7? Use this random track selector to pick your next circuit by length (Short, Medium, Long)." />
+    content="Can't decide where to race in Gran Turismo 7? Use GTTraxx to pick your next circuit by length or layout." />
   <meta property="og:image" content="https://gt7tracks.robinkali.nl/og-image.png" />
   <meta property="og:image:width" content="1200" />
   <meta property="og:image:height" content="630" />
-  <meta property="og:image:alt" content="GT7 Random Circuit Selector" />
+  <meta property="og:image:alt" content="GTTraxx logo and randomizer interface" />
   <meta property="og:locale" content="en_US" />
-  <meta property="og:site_name" content="GT7 Circuit Randomizer" />
+  <meta property="og:site_name" content="GTTraxx" />
 
   <!-- ── Twitter Card ────────────────────────────────────────────────────── -->
   <meta name="twitter:card" content="summary_large_image" />
-  <meta name="twitter:title" content="GT7 Random Circuit Selector" />
+  <meta name="twitter:title" content="GTTraxx — GT7 Random Track Selector" />
   <meta name="twitter:description"
-    content="Can't decide where to race in Gran Turismo 7? Use this random track selector to pick your next circuit by length (Short, Medium, Long)." />
+    content="Can't decide where to race in Gran Turismo 7? Use GTTraxx to pick your next circuit." />
   <meta name="twitter:image" content="https://gt7tracks.robinkali.nl/og-image.png" />
-  <meta name="twitter:image:alt" content="GT7 Random Circuit Selector" />
+  <meta name="twitter:image:alt" content="GTTraxx dashboard" />
 
   <!-- ── PWA / Theme ─────────────────────────────────────────────────────── -->
   <meta name="theme-color" content="#0066cc" />
   <meta name="apple-mobile-web-app-capable" content="yes" />
   <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent" />
-  <meta name="apple-mobile-web-app-title" content="GT7 Randomizer" />
-  <link rel="manifest" href="manifest.json" />
-  <link rel="apple-touch-icon" href="icons/icon-192.png" />
+  <meta name="apple-mobile-web-app-title" content="GTTraxx" />
+  <link rel="manifest" href="site.webmanifest" />
+  <link rel="apple-touch-icon" href="apple-touch-icon.png" />
 
   <!-- ── Favicon ─────────────────────────────────────────────────────────── -->
-  <link rel="icon" type="image/png" sizes="192x192" href="icons/icon-192.png" />
+  <link rel="icon" type="image/png" sizes="96x96" href="favicon-96x96.png" />
+  <link rel="icon" type="image/svg+xml" href="favicon.svg" />
+  <link rel="shortcut icon" href="favicon.ico" />
 
   <!-- ── Styles ──────────────────────────────────────────────────────────── -->
   <link rel="stylesheet" href="styles.css" />
@@ -61,15 +63,13 @@
   <header role="banner">
     <div class="header-content">
       <div class="logo-container">
-        <!-- User will provide logo image later -->
-        <img src="logo.png" alt="GT7 App Logo" class="site-logo" id="site-logo" onerror="this.style.display='none'">
         <div class="logo-mark" aria-hidden="true">
           <div class="logo-stripe"></div>
           <div class="logo-stripe"></div>
           <div class="logo-stripe"></div>
         </div>
       </div>
-      <h1 class="site-title">GT7 <span>Circuit</span> Randomizer</h1>
+      <h1 class="site-title"><span class="logo-gt">GT</span><span class="logo-traxx">Traxx</span></h1>
       <p class="site-subtitle">Gran Turismo 7 · Random Track Selector</p>
     </div>
   </header>
@@ -239,14 +239,14 @@
 
           <div class="form-group">
             <label class="form-label" for="season-name-input">Season Name</label>
-            <input type="text" id="season-name-input" class="form-input"
-              placeholder="e.g. Spring Championship 2025" maxlength="50" autocomplete="off" />
+            <input type="text" id="season-name-input" class="form-input" placeholder="e.g. Spring Championship 2025"
+              maxlength="50" autocomplete="off" />
           </div>
 
           <div class="form-group">
             <label class="form-label" for="season-race-count-input">Number of Races</label>
-            <input type="number" id="season-race-count-input" class="form-input"
-              placeholder="e.g. 7" min="1" max="48" />
+            <input type="number" id="season-race-count-input" class="form-input" placeholder="e.g. 7" min="1"
+              max="48" />
           </div>
 
           <button class="btn-primary" id="btn-go-to-step2" type="button">
@@ -262,7 +262,8 @@
             ← Back
           </button>
           <h2 class="create-title" id="create-step2-title">Pick Circuits</h2>
-          <p class="create-subtitle" id="create-step2-subtitle">Select exactly the required number of circuits for this season.</p>
+          <p class="create-subtitle" id="create-step2-subtitle">Select exactly the required number of circuits for this
+            season.</p>
 
           <div class="track-select-counter" aria-live="polite" aria-atomic="true">
             Selected: <strong id="track-select-count">0</strong> / <strong id="track-select-target">0</strong>
@@ -412,7 +413,7 @@
   <footer role="contentinfo">
     <div class="footer-divider" aria-hidden="true"></div>
     <p class="footer-text">
-      GT7 Random Circuit Selector &mdash; Fan-made tool.<br />
+      GTTraxx &mdash; Fan-made tool.<br />
       Gran Turismo 7 is a trademark of <a href="https://www.playstation.com/en-us/games/gran-turismo-7/" target="_blank"
         rel="noopener noreferrer">Sony Interactive Entertainment &amp; Polyphony Digital</a>.<br />
       Not affiliated with or endorsed by Sony or Polyphony Digital.
