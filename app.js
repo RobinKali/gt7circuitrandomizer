@@ -233,12 +233,20 @@ const views = {
   seasons:       document.getElementById('view-seasons'),
   createSeason:  document.getElementById('view-create-season'),
   seasonDetail:  document.getElementById('view-season-detail'),
+  sharedSeason:  document.getElementById('view-shared-season'),
 };
 
 function showView(name) {
   Object.values(views).forEach(v => v && v.classList.remove('active'));
   if (views[name]) views[name].classList.add('active');
 }
+
+// ─── Init: check URL for shared season param ─────────────────────────────────
+(function initURLCheck() {
+  const params      = new URLSearchParams(window.location.search);
+  const seasonParam = params.get('season');
+  if (seasonParam) tryLoadSharedSeason(seasonParam);
+})();
 
 // ─── Nav Tabs ─────────────────────────────────────────────────────────────────
 const navRandomizer = document.getElementById('nav-randomizer');
@@ -597,6 +605,12 @@ seasonRollBtn.addEventListener('click', async () => {
 
   seasonResultCard.classList.add('visible');
 
+  // Enable WhatsApp share button with this circuit's data
+  const shareBtn = document.getElementById('btn-share-track');
+  if (shareBtn) {
+    shareBtn.onclick = () => shareTrackToWhatsApp(chosen);
+  }
+
   isSeasonAnimating = false;
   renderSeasonDetail(); // refresh list + progress
 });
@@ -635,4 +649,146 @@ function escHtml(str) {
     .replace(/</g, '&lt;')
     .replace(/>/g, '&gt;')
     .replace(/"/g, '&quot;');
+}
+
+// ─── Toast ────────────────────────────────────────────────────────────────────
+let _toastTimer;
+function showToast(message) {
+  const toast = document.getElementById('toast');
+  if (!toast) return;
+  clearTimeout(_toastTimer);
+  toast.textContent = message;
+  toast.classList.add('visible');
+  _toastTimer = setTimeout(() => toast.classList.remove('visible'), 2500);
+}
+
+// ─── WhatsApp Track Share ─────────────────────────────────────────────────────
+function shareTrackToWhatsApp(circuit) {
+  const msg = [
+    '🏁 RACE DAY ANNOUNCEMENT 🏁',
+    '',
+    `Tonight's track is: ${circuit.name} — ${circuit.layout}!`,
+    `Length: ${circuit.length_km.toFixed(1)} km  |  Category: ${circuit.category}`,
+    '',
+    'Get your cars ready! 🏎️💨'
+  ].join('\n');
+
+  if (navigator.share) {
+    navigator.share({ title: 'GT7 Race Day!', text: msg }).catch(() => {
+      openWhatsAppURL(msg);
+    });
+  } else {
+    openWhatsAppURL(msg);
+  }
+}
+
+function openWhatsAppURL(text) {
+  const encoded = encodeURIComponent(text);
+  window.open('https://wa.me/?text=' + encoded, '_blank', 'noopener,noreferrer');
+}
+
+// ─── Share Season Status ──────────────────────────────────────────────────────
+const btnShareSeason = document.getElementById('btn-share-season');
+if (btnShareSeason) {
+  btnShareSeason.addEventListener('click', () => {
+    const seasons = loadSeasons();
+    const season  = seasons.find(s => s.id === currentSeasonId);
+    if (!season) return;
+
+    let encoded;
+    try {
+      encoded = btoa(unescape(encodeURIComponent(JSON.stringify(season))));
+    } catch {
+      showToast('⚠ Could not encode season data.');
+      return;
+    }
+
+    const url = window.location.origin + window.location.pathname + '?season=' + encoded;
+
+    if (navigator.clipboard && navigator.clipboard.writeText) {
+      navigator.clipboard.writeText(url)
+        .then(() => showToast('🔗 Link copied!'))
+        .catch(() => showToast('⚠ Copy failed — try manually.'));
+    } else {
+      // Fallback: open WhatsApp with the link
+      const msg = `👁 View my GT7 Race Season "${season.name}":\n${url}`;
+      openWhatsAppURL(msg);
+    }
+  });
+}
+
+// ═══════════════════════════════════════════════════════════════════════════
+//  SHARED SEASON (Read-Only View)
+// ═══════════════════════════════════════════════════════════════════════════
+
+function tryLoadSharedSeason(encoded) {
+  try {
+    const season = JSON.parse(decodeURIComponent(escape(atob(encoded))));
+    if (!season || typeof season.name !== 'string' || !Array.isArray(season.circuits)) {
+      throw new Error('Invalid season data');
+    }
+    renderSharedSeasonView(season);
+    showView('sharedSeason');
+    // Hide nav tabs — participants can't interact with the main app
+    const nav = document.querySelector('.main-nav');
+    if (nav) nav.style.display = 'none';
+  } catch {
+    // Malformed param — silently load normal app
+    console.warn('[GT7] Invalid ?season param — loading normally.');
+  }
+}
+
+function renderSharedSeasonView(season) {
+  const completed = season.circuits.filter(c => c.completed).length;
+  const total     = season.circuits.length;
+  const pct       = total > 0 ? Math.round((completed / total) * 100) : 0;
+
+  const nameEl   = document.getElementById('shared-season-name');
+  const barEl    = document.getElementById('shared-progress-bar');
+  const labelEl  = document.getElementById('shared-progress-label');
+  const listEl   = document.getElementById('shared-circuits-list');
+  const homeBtn  = document.getElementById('btn-shared-home');
+
+  if (nameEl)  nameEl.textContent    = season.name;
+  if (barEl)   barEl.style.width     = `${pct}%`;
+  if (labelEl) labelEl.textContent   = `${completed} / ${total} completed (${pct}%)`;
+
+  if (listEl) {
+    listEl.innerHTML = '';
+    season.circuits.forEach(circuit => {
+      const li = document.createElement('li');
+      li.className = 'season-circuit-item' + (circuit.completed ? ' completed' : '');
+
+      // Bullet indicator instead of the interactive complete button
+      const dot = document.createElement('span');
+      dot.className = 'circuit-complete-btn';
+      dot.setAttribute('aria-hidden', 'true');
+      dot.innerHTML = circuit.completed ? '✓' : '';
+      dot.style.pointerEvents = 'none'; // read-only
+
+      const info = document.createElement('div');
+      info.className = 'circuit-item-info';
+      info.innerHTML = `
+        <div class="circuit-item-name">${escHtml(circuit.name)}</div>
+        <div class="circuit-item-layout">${escHtml(circuit.layout)}</div>
+      `;
+
+      const badge = document.createElement('span');
+      badge.className = `circuit-item-badge ${circuit.category}`;
+      badge.textContent = circuit.category;
+
+      li.appendChild(dot);
+      li.appendChild(info);
+      li.appendChild(badge);
+      listEl.appendChild(li);
+    });
+  }
+
+  if (homeBtn) {
+    homeBtn.addEventListener('click', () => {
+      // Strip the ?season param and reload into the normal app
+      history.replaceState(null, '', window.location.pathname);
+      location.reload();
+    });
+  }
 }

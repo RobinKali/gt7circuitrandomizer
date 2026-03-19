@@ -11,22 +11,28 @@
   <meta name="description"
     content="Can't decide where to race in Gran Turismo 7? Use this random track selector to pick your next circuit by length (Short, Medium, Long)." />
   <meta name="robots" content="index, follow" />
-  <link rel="canonical" href="https://yourdomain.com/" />
+  <link rel="canonical" href="https://gt7tracks.robinkali.nl/" />
 
   <!-- ── Open Graph ──────────────────────────────────────────────────────── -->
   <meta property="og:type" content="website" />
-  <meta property="og:url" content="https://yourdomain.com/" />
+  <meta property="og:url" content="https://gt7tracks.robinkali.nl/" />
   <meta property="og:title" content="GT7 Random Circuit Selector" />
   <meta property="og:description"
     content="Can't decide where to race in Gran Turismo 7? Use this random track selector to pick your next circuit by length (Short, Medium, Long)." />
-  <meta property="og:image" content="https://via.placeholder.com/1200x630?text=GT7+Randomizer" />
+  <meta property="og:image" content="https://gt7tracks.robinkali.nl/og-image.png" />
+  <meta property="og:image:width" content="1200" />
+  <meta property="og:image:height" content="630" />
+  <meta property="og:image:alt" content="GT7 Random Circuit Selector" />
+  <meta property="og:locale" content="en_US" />
+  <meta property="og:site_name" content="GT7 Circuit Randomizer" />
 
   <!-- ── Twitter Card ────────────────────────────────────────────────────── -->
   <meta name="twitter:card" content="summary_large_image" />
   <meta name="twitter:title" content="GT7 Random Circuit Selector" />
   <meta name="twitter:description"
     content="Can't decide where to race in Gran Turismo 7? Use this random track selector to pick your next circuit by length (Short, Medium, Long)." />
-  <meta name="twitter:image" content="https://via.placeholder.com/1200x630?text=GT7+Randomizer" />
+  <meta name="twitter:image" content="https://gt7tracks.robinkali.nl/og-image.png" />
+  <meta name="twitter:image:alt" content="GT7 Random Circuit Selector" />
 
   <!-- ── PWA / Theme ─────────────────────────────────────────────────────── -->
   <meta name="theme-color" content="#0066cc" />
@@ -53,13 +59,19 @@
        HEADER
   ═══════════════════════════════════════════════════════════════════════ -->
   <header role="banner">
-    <div class="logo-mark" aria-hidden="true">
-      <div class="logo-stripe"></div>
-      <div class="logo-stripe"></div>
-      <div class="logo-stripe"></div>
+    <div class="header-content">
+      <div class="logo-container">
+        <!-- User will provide logo image later -->
+        <img src="logo.png" alt="GT7 App Logo" class="site-logo" id="site-logo" onerror="this.style.display='none'">
+        <div class="logo-mark" aria-hidden="true">
+          <div class="logo-stripe"></div>
+          <div class="logo-stripe"></div>
+          <div class="logo-stripe"></div>
+        </div>
+      </div>
+      <h1 class="site-title">GT7 <span>Circuit</span> Randomizer</h1>
+      <p class="site-subtitle">Gran Turismo 7 · Random Track Selector</p>
     </div>
-    <h1 class="site-title">GT7 <span>Circuit</span> Randomizer</h1>
-    <p class="site-subtitle">Gran Turismo 7 · Random Track Selector</p>
   </header>
 
   <!-- ══════════════════════════════════════════════════════════════════════
@@ -281,7 +293,12 @@
         </button>
 
         <div class="season-detail-header">
-          <h2 id="detail-season-name" class="detail-season-title"></h2>
+          <div class="detail-header-top">
+            <h2 id="detail-season-name" class="detail-season-title"></h2>
+            <button class="btn-share-season" id="btn-share-season" type="button" aria-label="Share season status">
+              🔗 Share
+            </button>
+          </div>
           <div class="detail-progress-bar-wrap">
             <div class="detail-progress-bar" id="detail-progress-bar"></div>
           </div>
@@ -320,6 +337,9 @@
                 <span class="chip-value" id="season-track-category">—</span>
               </div>
             </div>
+            <button class="btn-whatsapp-share" id="btn-share-track" type="button">
+              📲 Share to WhatsApp
+            </button>
           </div>
         </article>
 
@@ -346,6 +366,43 @@
 
       </div>
     </div><!-- /#view-season-detail -->
+
+    <!-- ─────────────────────────────────────────────────────────────────────
+         VIEW: SHARED SEASON (Read-Only)
+    ──────────────────────────────────────────────────────────────────────── -->
+    <div id="view-shared-season" class="view">
+      <div class="page-wrapper">
+
+        <!-- Read-only badge -->
+        <div class="shared-badge" aria-label="Read-only view">
+          <span aria-hidden="true">👁</span> Read-Only Season View
+        </div>
+
+        <div class="season-detail-header">
+          <div class="detail-header-top">
+            <h2 id="shared-season-name" class="detail-season-title"></h2>
+          </div>
+          <div class="detail-progress-bar-wrap">
+            <div class="detail-progress-bar" id="shared-progress-bar"></div>
+          </div>
+          <p class="detail-progress-label" id="shared-progress-label"></p>
+        </div>
+
+        <!-- Read-only circuit list -->
+        <div class="season-circuits-section">
+          <p class="section-label">Season Circuits</p>
+          <ul id="shared-circuits-list" class="season-circuits-list" aria-label="Shared season circuits">
+            <!-- populated by JS -->
+          </ul>
+        </div>
+
+        <!-- CTA to use the app -->
+        <button class="btn-cta-home" id="btn-shared-home" type="button">
+          🏁 Create Your Own Season →
+        </button>
+
+      </div>
+    </div><!-- /#view-shared-season -->
 
   </main>
 
@@ -401,6 +458,9 @@
       });
     })();
   </script>
+
+  <!-- Toast notification -->
+  <div id="toast" role="status" aria-live="polite"></div>
 
 </body>
 

@@ -1,7 +1,7 @@
 // GT7 Random Circuit Selector — Service Worker
 // Cache-first strategy for full offline support
 
-const CACHE_NAME = 'gt7-randomizer-v1';
+const CACHE_NAME = 'gt7-randomizer-v2';
 const ASSETS_TO_CACHE = [
   './',
   './index.html',
