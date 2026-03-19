@@ -1610,30 +1610,30 @@ footer {
 .btn-share-season {
   display: inline-flex;
   align-items: center;
-  gap: 0.3rem;
-  padding: 0.35rem 0.75rem;
-  background: var(--bg-surface);
-  border: 1px solid var(--border-subtle);
+  gap: 0.35rem;
+  padding: 0.45rem 0.9rem;
+  background: rgba(37, 211, 102, 0.1);
+  border: 1px solid rgba(37, 211, 102, 0.25);
   border-radius: var(--radius-sm);
-  color: var(--text-secondary);
+  color: #25d366;
   font-family: 'Montserrat', sans-serif;
-  font-size: 0.7rem;
-  font-weight: 700;
-  letter-spacing: 0.05em;
+  font-size: 0.72rem;
+  font-weight: 800;
+  letter-spacing: 0.06em;
   text-transform: uppercase;
   cursor: pointer;
   white-space: nowrap;
   flex-shrink: 0;
   margin-top: 0.2rem;
-  transition: all 0.18s ease;
+  transition: all 0.2s ease;
   -webkit-tap-highlight-color: transparent;
   user-select: none;
 }
 
 .btn-share-season:hover {
-  background: rgba(0, 102, 204, 0.15);
-  border-color: var(--accent-blue);
-  color: var(--accent-blue);
+  background: rgba(37, 211, 102, 0.2);
+  border-color: #25d366;
+  transform: translateY(-1px);
 }
 
 /* ─── WhatsApp Share Button (in result card) ─────────────────────────────────── */

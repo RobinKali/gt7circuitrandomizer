@@ -735,7 +735,11 @@ function shareTrackToWhatsApp(circuit) {
   ].join('\n');
 
   if (navigator.share) {
-    navigator.share({ title: 'GT7 Race Day!', text: msg }).catch(() => {
+    navigator.share({
+      title: 'GT7 Race Day!',
+      text: msg,
+      url: window.location.origin
+    }).catch(() => {
       openWhatsAppURL(msg);
     });
   } else {
@@ -765,17 +769,33 @@ if (btnShareSeason) {
     }
 
     const url = window.location.origin + window.location.pathname + '?season=' + encoded;
+    const msg = `Eyeing my GT7 Race Season "${season.name}"? Check it out here:\n${url}`;
 
-    if (navigator.clipboard && navigator.clipboard.writeText) {
-      navigator.clipboard.writeText(url)
-        .then(() => showToast('🔗 Link copied!'))
-        .catch(() => showToast('⚠ Copy failed — try manually.'));
+    if (navigator.share) {
+      navigator.share({
+        title: `GTTraxx — Race Season: ${season.name}`,
+        text: msg,
+        url: url
+      }).catch(() => {
+        // Fallback to clipboard if share fails/cancelled
+        copyToClipboard(url);
+      });
     } else {
-      // Fallback: open WhatsApp with the link
-      const msg = `👁 View my GT7 Race Season "${season.name}":\n${url}`;
-      openWhatsAppURL(msg);
+      copyToClipboard(url);
     }
   });
+}
+
+function copyToClipboard(text) {
+  if (navigator.clipboard && navigator.clipboard.writeText) {
+    navigator.clipboard.writeText(text)
+      .then(() => showToast('🔗 Link copied!'))
+      .catch(() => showToast('⚠ Copy failed — try manually.'));
+  } else {
+    // Ultimate fallback for very legacy browsers or insecure contexts
+    const msg = `GT7 Race Season:\n${text}`;
+    openWhatsAppURL(msg);
+  }
 }
 
 // ═══════════════════════════════════════════════════════════════════════════

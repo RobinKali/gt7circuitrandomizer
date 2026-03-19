@@ -1,7 +1,7 @@
 {
-  "name": "GT7 Random Circuit Selector",
-  "short_name": "GT7 Randomizer",
-  "description": "Can't decide where to race in Gran Turismo 7? Use this random track selector to pick your next circuit by length (Short, Medium, Long).",
+  "name": "GTTraxx — GT7 Track Selector",
+  "short_name": "GTTraxx",
+  "description": "Can't decide where to race in Gran Turismo 7? Use GTTraxx to pick your next track by length (Short, Medium, Long) or category.",
   "start_url": "./",
   "display": "standalone",
   "orientation": "any",
@@ -39,7 +39,7 @@
       "src": "og-image.png",
       "sizes": "1200x630",
       "type": "image/png",
-      "label": "GT7 Random Circuit Selector home screen"
+      "label": "GTTraxx Track Selector home screen"
     }
   ]
 }

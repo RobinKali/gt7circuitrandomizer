@@ -1,4 +1,4 @@
-# https://gt7tracks.robinkali.nl robots.txt
+# https://gttraxx.robinkali.nl robots.txt
 User-agent: *
 Allow: /
 
