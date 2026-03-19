@@ -7,19 +7,19 @@
   <meta http-equiv="X-UA-Compatible" content="IE=edge" />
 
   <!-- ── Primary SEO ─────────────────────────────────────────────────────── -->
-  <title>GTTraxx — GT7 Random Circuit Selector</title>
+  <title>GTTraxx — GT7 Random Track Selector</title>
   <meta name="description"
-    content="Can't decide where to race in Gran Turismo 7? Use GTTraxx to pick your next circuit by length or layout." />
+    content="Can't decide where to race in Gran Turismo 7? Use GTTraxx to pick your next track by length or layout." />
   <meta name="robots" content="index, follow" />
-  <link rel="canonical" href="https://gt7tracks.robinkali.nl/" />
+  <link rel="canonical" href="https://gttraxx.robinkali.nl/" />
 
   <!-- ── Open Graph ──────────────────────────────────────────────────────── -->
   <meta property="og:type" content="website" />
-  <meta property="og:url" content="https://gt7tracks.robinkali.nl/" />
+  <meta property="og:url" content="https://gttraxx.robinkali.nl/" />
   <meta property="og:title" content="GTTraxx — GT7 Random Track Selector" />
   <meta property="og:description"
-    content="Can't decide where to race in Gran Turismo 7? Use GTTraxx to pick your next circuit by length or layout." />
-  <meta property="og:image" content="https://gt7tracks.robinkali.nl/og-image.png" />
+    content="Can't decide where to race in Gran Turismo 7? Use GTTraxx to pick your next track by length or layout." />
+  <meta property="og:image" content="https://gttraxx.robinkali.nl/og-image.png" />
   <meta property="og:image:width" content="1200" />
   <meta property="og:image:height" content="630" />
   <meta property="og:image:alt" content="GTTraxx logo and randomizer interface" />
@@ -30,8 +30,8 @@
   <meta name="twitter:card" content="summary_large_image" />
   <meta name="twitter:title" content="GTTraxx — GT7 Random Track Selector" />
   <meta name="twitter:description"
-    content="Can't decide where to race in Gran Turismo 7? Use GTTraxx to pick your next circuit." />
-  <meta name="twitter:image" content="https://gt7tracks.robinkali.nl/og-image.png" />
+    content="Can't decide where to race in Gran Turismo 7? Use GTTraxx to pick your next track." />
+  <meta name="twitter:image" content="https://gttraxx.robinkali.nl/og-image.png" />
   <meta name="twitter:image:alt" content="GTTraxx dashboard" />
 
   <!-- ── PWA / Theme ─────────────────────────────────────────────────────── -->
@@ -137,16 +137,29 @@
           </div>
         </section>
 
-        <!-- ── Options: Reverse Layouts ───────────────────────────────────── -->
-        <div class="options-row" role="group" aria-label="Randomizer options">
-          <label class="toggle-label" for="reverse-toggle">
-            <input type="checkbox" id="reverse-toggle" aria-describedby="reverse-desc" />
-            <span class="toggle-track" aria-hidden="true"></span>
-            <span class="toggle-text">
-              <strong>Include Reverse Layouts</strong>
-              <span id="reverse-desc">Doubles available circuits with reverse variants</span>
-            </span>
-          </label>
+        <div class="options-container">
+          <div class="options-row" role="group" aria-label="Randomizer options">
+            <label class="toggle-label" for="reverse-toggle">
+              <input type="checkbox" id="reverse-toggle" aria-describedby="reverse-desc" />
+              <span class="toggle-track" aria-hidden="true"></span>
+              <span class="toggle-text">
+                <strong>Include Reverse Layouts</strong>
+                <span id="reverse-desc">Doubles available circuits with reverse variants</span>
+              </span>
+            </label>
+          </div>
+
+          <div class="options-row" role="group" aria-label="Rally options">
+            <label class="toggle-label" for="rally-toggle">
+              <input type="checkbox" id="rally-toggle" aria-describedby="rally-desc" />
+              <span class="toggle-track" aria-hidden="true"></span>
+              <span class="toggle-text">
+                <strong>Include Rally Circuits</strong>
+                <span id="rally-desc">Dirt and Snow tracks (Colorado, Lake Louise, etc.)</span>
+              </span>
+            </label>
+          </div>
+
           <div class="pool-badge" aria-live="polite" aria-atomic="true">
             Pool: <strong id="pool-count">48</strong>
           </div>
@@ -156,7 +169,7 @@
         <section class="roll-section" aria-label="Randomizer">
           <button id="roll-btn" type="button" aria-label="Roll a random circuit" aria-describedby="slot-display">
             <span class="btn-dice" aria-hidden="true">🎲</span>
-            <span class="btn-text">Roll Circuit</span>
+            <span class="btn-text">Roll Track</span>
           </button>
         </section>
 
@@ -167,14 +180,14 @@
 
         <!-- ── Empty State ────────────────────────────────────────────────── -->
         <div id="empty-state" role="alert" aria-live="assertive">
-          <p>😅 No circuits match this filter. Try a different category.</p>
+          <p>😅 No Traxx match this filter. Try a different category.</p>
         </div>
 
         <!-- ── Result Card ────────────────────────────────────────────────── -->
         <article id="result-card" aria-label="Selected circuit" aria-live="polite">
           <div class="card-header">
             <div class="card-header-dot" aria-hidden="true"></div>
-            <span class="card-header-label">Selected Circuit</span>
+            <span class="card-header-label">Selected Track</span>
           </div>
           <div class="card-body">
             <h2 id="track-name"></h2>
@@ -189,10 +202,14 @@
                 <span class="chip-value" id="track-category">—</span>
               </div>
             </div>
+            <button class="btn-whatsapp-share" id="btn-whatsapp-share-random" type="button">
+              <span>📲 Share</span>
+            </button>
           </div>
-        </article>
+      </div>
+      </article>
 
-      </div><!-- /.page-wrapper -->
+    </div><!-- /.page-wrapper -->
     </div><!-- /#view-randomizer -->
 
     <!-- ─────────────────────────────────────────────────────────────────────
@@ -239,18 +256,18 @@
 
           <div class="form-group">
             <label class="form-label" for="season-name-input">Season Name</label>
-            <input type="text" id="season-name-input" class="form-input" placeholder="e.g. Spring Championship 2025"
+            <input type="text" id="season-name-input" class="form-input" placeholder="Bijv. RTW Porsche Cup"
               maxlength="50" autocomplete="off" />
           </div>
 
           <div class="form-group">
             <label class="form-label" for="season-race-count-input">Number of Races</label>
-            <input type="number" id="season-race-count-input" class="form-input" placeholder="e.g. 7" min="1"
-              max="48" />
+            <input type="number" id="season-race-count-input" class="form-input" placeholder="Bijv. 7" min="1"
+              max="16" />
           </div>
 
           <button class="btn-primary" id="btn-go-to-step2" type="button">
-            Next: Pick Circuits →
+            Next: Pick Traxx →
           </button>
 
           <p id="create-step1-error" class="form-error" aria-live="assertive"></p>
@@ -261,8 +278,8 @@
           <button class="btn-back" id="btn-back-to-step1" type="button">
             ← Back
           </button>
-          <h2 class="create-title" id="create-step2-title">Pick Circuits</h2>
-          <p class="create-subtitle" id="create-step2-subtitle">Select exactly the required number of circuits for this
+          <h2 class="create-title" id="create-step2-title">Pick Traxx</h2>
+          <p class="create-subtitle" id="create-step2-subtitle">Select the number of Traxx for this
             season.</p>
 
           <div class="track-select-counter" aria-live="polite" aria-atomic="true">
@@ -310,7 +327,7 @@
         <section class="roll-section" aria-label="Season Randomizer">
           <button id="season-roll-btn" type="button" aria-label="Roll a random circuit from this season">
             <span class="btn-dice" aria-hidden="true">🎲</span>
-            <span class="btn-text">Roll Circuit</span>
+            <span class="btn-text">Roll Track</span>
           </button>
         </section>
 
@@ -323,7 +340,7 @@
         <article id="season-result-card" aria-label="Season selected circuit" aria-live="polite">
           <div class="card-header">
             <div class="card-header-dot" aria-hidden="true"></div>
-            <span class="card-header-label">Selected Circuit</span>
+            <span class="card-header-label">Selected Track</span>
           </div>
           <div class="card-body">
             <h2 id="season-track-name"></h2>
@@ -339,7 +356,7 @@
               </div>
             </div>
             <button class="btn-whatsapp-share" id="btn-share-track" type="button">
-              📲 Share to WhatsApp
+              📲 Share
             </button>
           </div>
         </article>
@@ -348,7 +365,7 @@
         <div id="season-empty-state" class="seasons-empty-state" role="status" style="display:none;">
           <span class="seasons-empty-icon" aria-hidden="true">🏁</span>
           <p>All circuits completed!</p>
-          <p class="seasons-empty-sub">This season is finished. Well done!</p>
+          <p class="seasons-empty-sub">It's over! How can you be faster next season?</p>
         </div>
 
         <!-- Circuit list -->
@@ -391,7 +408,7 @@
 
         <!-- Read-only circuit list -->
         <div class="season-circuits-section">
-          <p class="section-label">Season Circuits</p>
+          <p class="section-label">Season Traxx</p>
           <ul id="shared-circuits-list" class="season-circuits-list" aria-label="Shared season circuits">
             <!-- populated by JS -->
           </ul>
@@ -413,9 +430,11 @@
   <footer role="contentinfo">
     <div class="footer-divider" aria-hidden="true"></div>
     <p class="footer-text">
-      GTTraxx &mdash; Fan-made tool.<br />
-      Gran Turismo 7 is a trademark of <a href="https://www.playstation.com/en-us/games/gran-turismo-7/" target="_blank"
-        rel="noopener noreferrer">Sony Interactive Entertainment &amp; Polyphony Digital</a>.<br />
+      GTTraxx &mdash; Made by <a href="https://kaliwebworks.nl" target="_blank"
+        rel="noopener noreferrer">kaliwebworks.nl</a>.<br />
+      Gran Turismo 7 is a trademark of<br />
+      <a href="https://www.playstation.com/en-us/games/gran-turismo-7/" target="_blank" rel="noopener noreferrer">Sony
+        Interactive Entertainment &amp; Polyphony Digital</a>.<br />
       Not affiliated with or endorsed by Sony or Polyphony Digital.
     </p>
   </footer>

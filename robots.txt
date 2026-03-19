@@ -2,4 +2,4 @@
 User-agent: *
 Allow: /
 
-Sitemap: https://gt7tracks.robinkali.nl/sitemap.xml
+Sitemap: https://gttraxx.robinkali.nl/sitemap.xml

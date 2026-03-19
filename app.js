@@ -5,54 +5,90 @@
 
 // ─── Circuit Database ────────────────────────────────────────────────────────
 const CIRCUITS = [
-  { name: "Alsace", layout: "Village", length_km: 5.4, category: "Medium" },
-  { name: "Alsace", layout: "Test Course", length_km: 1.9, category: "Short" },
-  { name: "Autodrome Lago Maggiore", layout: "Full Course", length_km: 5.8, category: "Long" },
-  { name: "Autodrome Lago Maggiore", layout: "East End", length_km: 3.6, category: "Medium" },
-  { name: "Autodrome Lago Maggiore", layout: "Center", length_km: 1.7, category: "Short" },
-  { name: "Autopolis", layout: "International Racing Course", length_km: 4.6, category: "Medium" },
+  { name: "Alsace", layout: "Test Course", length_km: 2.0, category: "Short", hasReverse: true },
+  { name: "Alsace", layout: "Village", length_km: 5.4, category: "Medium", hasReverse: true },
+  { name: "Autodrome Lago Maggiore", layout: "Center", length_km: 1.7, category: "Short", hasReverse: true },
+  { name: "Autodrome Lago Maggiore", layout: "East", length_km: 3.6, category: "Medium", hasReverse: true },
+  { name: "Autodrome Lago Maggiore", layout: "East End", length_km: 2.0, category: "Short", hasReverse: true },
+  { name: "Autodrome Lago Maggiore", layout: "Full Course", length_km: 5.8, category: "Long", hasReverse: true },
+  { name: "Autodrome Lago Maggiore", layout: "West", length_km: 4.2, category: "Medium", hasReverse: true },
+  { name: "Autodrome Lago Maggiore", layout: "West End", length_km: 2.5, category: "Short", hasReverse: true },
+  { name: "Autódromo de Interlagos", layout: "Full Course", length_km: 4.3, category: "Medium" },
+  { name: "Autodromo Nazionale Monza", layout: "Full Course", length_km: 5.8, category: "Long" },
+  { name: "Autodromo Nazionale Monza", layout: "No Chicane", length_km: 5.7, category: "Long" },
+  { name: "Autopolis", layout: "International Racing Course", length_km: 4.7, category: "Medium" },
   { name: "Autopolis", layout: "Shortcut Course", length_km: 3.0, category: "Short" },
-  { name: "Blue Moon Bay Speedway", layout: "Infield A", length_km: 3.3, category: "Short" },
+  { name: "Blue Moon Bay Speedway", layout: "Full Course", length_km: 3.2, category: "Short", hasReverse: true },
+  { name: "Blue Moon Bay Speedway", layout: "Infield A", length_km: 3.3, category: "Short", hasReverse: true },
+  { name: "Blue Moon Bay Speedway", layout: "Infield B", length_km: 2.8, category: "Short", hasReverse: true },
   { name: "Brands Hatch", layout: "Grand Prix Circuit", length_km: 3.9, category: "Medium" },
   { name: "Brands Hatch", layout: "Indy Circuit", length_km: 1.9, category: "Short" },
-  { name: "Broad Bean Raceway", layout: "Full Course", length_km: 1.6, category: "Short" },
-  { name: "Circuit de Barcelona-Catalunya", layout: "Grand Prix Layout", length_km: 4.6, category: "Medium" },
+  { name: "Broad Bean Raceway", layout: "Full Course", length_km: 1.7, category: "Short", hasReverse: true },
+  { name: "Circuit de Barcelona-Catalunya", layout: "GP Layout No Chicane", length_km: 4.7, category: "Medium" },
+  { name: "Circuit de Barcelona-Catalunya", layout: "Grand Prix Layout", length_km: 4.7, category: "Medium" },
+  { name: "Circuit de Barcelona-Catalunya", layout: "National Layout", length_km: 3.0, category: "Short" },
+  { name: "Circuit de Barcelona-Catalunya", layout: "Rallycross Layout", length_km: 1.1, category: "Short", isRally: true },
   { name: "Circuit de la Sarthe", layout: "24h Layout", length_km: 13.6, category: "Long" },
   { name: "Circuit de la Sarthe", layout: "No Chicane", length_km: 13.5, category: "Long" },
-  { name: "Circuit de Sainte-Croix", layout: "Layout A", length_km: 9.4, category: "Long" },
-  { name: "Circuit de Spa-Francorchamps", layout: "24h Layout", length_km: 7.0, category: "Long" },
-  { name: "Colorado Springs", layout: "Lake", length_km: 2.9, category: "Short" },
-  { name: "Daytona International Speedway", layout: "Road Course", length_km: 5.7, category: "Long" },
-  { name: "Daytona International Speedway", layout: "Tri-Oval", length_km: 4.0, category: "Medium" },
-  { name: "Deep Forest Raceway", layout: "Full Course", length_km: 4.2, category: "Medium" },
-  { name: "Dragon Trail", layout: "Seaside", length_km: 5.2, category: "Medium" },
-  { name: "Dragon Trail", layout: "Gardens", length_km: 4.3, category: "Medium" },
-  { name: "Fuji International Speedway", layout: "Full Course", length_km: 4.5, category: "Medium" },
-  { name: "Grand Valley Highway 1", layout: "Full Course", length_km: 5.0, category: "Medium" },
-  { name: "Grand Valley Highway 1", layout: "South", length_km: 2.0, category: "Short" },
-  { name: "High Speed Ring", layout: "Full Course", length_km: 4.0, category: "Medium" },
-  { name: "Interlagos", layout: "Full Course", length_km: 4.3, category: "Medium" },
-  { name: "Kyoto Driving Park", layout: "Yamagiwa", length_km: 4.9, category: "Medium" },
-  { name: "Kyoto Driving Park", layout: "Miyabi", length_km: 2.6, category: "Short" },
-  { name: "Lake Maggiore", layout: "West End", length_km: 4.1, category: "Medium" },
-  { name: "Michelin Raceway Road Atlanta", layout: "Full Course", length_km: 4.0, category: "Medium" },
+  { name: "Circuit de Sainte-Croix", layout: "Layout A", length_km: 9.5, category: "Long", hasReverse: true },
+  { name: "Circuit de Sainte-Croix", layout: "Layout B", length_km: 7.0, category: "Long", hasReverse: true },
+  { name: "Circuit de Sainte-Croix", layout: "Layout C", length_km: 10.8, category: "Long", hasReverse: true },
+  { name: "Circuit de Spa-Francorchamps", layout: "Full Course", length_km: 7.0, category: "Long" },
+  { name: "Circuit Gilles-Villeneuve", layout: "Full Course", length_km: 4.4, category: "Medium" },
+  { name: "Colorado Springs", layout: "Lake", length_km: 3.0, category: "Short", isRally: true, hasReverse: true },
+  { name: "Daytona", layout: "Road Course", length_km: 5.7, category: "Long" },
+  { name: "Daytona", layout: "Tri-Oval", length_km: 4.0, category: "Medium" },
+  { name: "Deep Forest Raceway", layout: "Full Course", length_km: 4.2, category: "Medium", hasReverse: true },
+  { name: "Dragon Trail", layout: "Gardens", length_km: 4.4, category: "Medium", hasReverse: true },
+  { name: "Dragon Trail", layout: "Seaside", length_km: 5.2, category: "Medium", hasReverse: true },
+  { name: "Eiger Nordwand", layout: "Full Course", length_km: 2.4, category: "Short", hasReverse: true },
+  { name: "Fishermans Ranch", layout: "Full Course", length_km: 6.9, category: "Long", isRally: true, hasReverse: true },
+  { name: "Fuji International Speedway", layout: "Full Course", length_km: 4.6, category: "Medium" },
+  { name: "Fuji International Speedway", layout: "GT", length_km: 4.5, category: "Medium" },
+  { name: "Goodwood Motor Circuit", layout: "Full Course", length_km: 3.8, category: "Medium" },
+  { name: "Grand Valley Highway 1", layout: "Full Course", length_km: 5.1, category: "Medium", hasReverse: true },
+  { name: "Grand Valley Highway 1", layout: "South", length_km: 2.0, category: "Short", hasReverse: true },
+  { name: "High Speed Ring", layout: "Full Course", length_km: 4.0, category: "Medium", hasReverse: true },
+  { name: "Kyoto Driving Park", layout: "Miyabi", length_km: 2.6, category: "Short", hasReverse: true },
+  { name: "Kyoto Driving Park", layout: "Yamagiwa", length_km: 4.9, category: "Medium", hasReverse: true },
+  { name: "Kyoto Driving Park", layout: "Yamagiwa + Miyabi", length_km: 6.8, category: "Long" },
+  { name: "Lake Louise", layout: "Long Track", length_km: 3.7, category: "Medium", isRally: true, hasReverse: true },
+  { name: "Lake Louise", layout: "Short Track", length_km: 2.6, category: "Short", isRally: true, hasReverse: true },
+  { name: "Lake Louise", layout: "Tri-Oval", length_km: 0.5, category: "Short", isRally: true, hasReverse: true },
+  { name: "Michelin Raceway Road Atlanta", layout: "Full Course", length_km: 4.1, category: "Medium" },
   { name: "Mount Panorama", layout: "Motor Racing Circuit", length_km: 6.2, category: "Long" },
-  { name: "Monza", layout: "No Chicane", length_km: 5.7, category: "Long" },
-  { name: "Northern Isle Festival", layout: "Speedway", length_km: 0.9, category: "Short" },
-  { name: "Nürburgring", layout: "Nordschleife", length_km: 20.8, category: "Long" },
-  { name: "Nürburgring", layout: "24h", length_km: 25.3, category: "Long" },
+  { name: "Northern Isle Speedway", layout: "Speedway", length_km: 0.9, category: "Short", hasReverse: true },
+  { name: "Nürburgring", layout: "24h", length_km: 25.4, category: "Long" },
+  { name: "Nürburgring", layout: "Endurance", length_km: 24.4, category: "Long" },
   { name: "Nürburgring", layout: "GP", length_km: 5.1, category: "Medium" },
+  { name: "Nürburgring", layout: "Nordschleife", length_km: 20.8, category: "Long" },
+  { name: "Nürburgring", layout: "Sprint", length_km: 3.6, category: "Medium" },
+  { name: "Okayama International Circuit", layout: "Full Course", length_km: 3.7, category: "Medium" },
+  { name: "Okayama International Circuit", layout: "Piper", length_km: 3.7, category: "Medium" },
   { name: "Red Bull Ring", layout: "Full Course", length_km: 4.3, category: "Medium" },
-  { name: "Sardegna", layout: "Road Track - A", length_km: 5.1, category: "Medium" },
-  { name: "Sardegna", layout: "Windmills", length_km: 3.3, category: "Short" },
-  { name: "Special Stage Route X", layout: "Full Course", length_km: 30.2, category: "Long" },
-  { name: "Suzuka Circuit", layout: "Full Course", length_km: 5.8, category: "Long" },
+  { name: "Red Bull Ring", layout: "Short Course", length_km: 2.3, category: "Short" },
+  { name: "Sardegna - Road Track", layout: "A", length_km: 5.1, category: "Medium", hasReverse: true },
+  { name: "Sardegna - Road Track", layout: "B", length_km: 3.9, category: "Medium", hasReverse: true },
+  { name: "Sardegna - Road Track", layout: "C", length_km: 2.7, category: "Short", hasReverse: true },
+  { name: "Sardegna - Windmills", layout: "Full Course", length_km: 3.3, category: "Short", isRally: true },
+  { name: "Special Stage Route X", layout: "Full Course", length_km: 30.3, category: "Long" },
   { name: "Suzuka Circuit", layout: "East Course", length_km: 2.2, category: "Short" },
+  { name: "Suzuka Circuit", layout: "Full Course", length_km: 5.8, category: "Long" },
+  { name: "Tokyo Expressway", layout: "Central Inner Loop", length_km: 4.4, category: "Medium" },
+  { name: "Tokyo Expressway", layout: "Central Outer Loop", length_km: 4.4, category: "Medium" },
+  { name: "Tokyo Expressway", layout: "East Inner Loop", length_km: 7.3, category: "Long" },
   { name: "Tokyo Expressway", layout: "East Outer Loop", length_km: 7.3, category: "Long" },
-  { name: "Trial Mountain", layout: "Full Course", length_km: 5.4, category: "Medium" },
-  { name: "Tsukuba Circuit", layout: "Full Course", length_km: 2.0, category: "Short" },
-  { name: "Watkins Glen", layout: "Long Course", length_km: 5.4, category: "Medium" },
-  { name: "Watkins Glen", layout: "Short Course", length_km: 3.9, category: "Medium" }
+  { name: "Tokyo Expressway", layout: "South Inner Loop", length_km: 5.2, category: "Medium" },
+  { name: "Tokyo Expressway", layout: "South Outer Loop", length_km: 5.2, category: "Medium" },
+  { name: "Trial Mountain Circuit", layout: "Full Course", length_km: 5.4, category: "Medium", hasReverse: true },
+  { name: "Tsukuba Circuit", layout: "Full Course", length_km: 2.1, category: "Short" },
+  { name: "Watkins Glen", layout: "Long Course", length_km: 5.5, category: "Medium" },
+  { name: "Watkins Glen", layout: "Short Course", length_km: 3.9, category: "Medium" },
+  { name: "WeatherTech Raceway Laguna Seca", layout: "Full Course", length_km: 3.6, category: "Medium" },
+  { name: "Willow Springs", layout: "Big Willow", length_km: 4.0, category: "Medium" },
+  { name: "Willow Springs", layout: "Horse Thief Mile", length_km: 1.0, category: "Short", hasReverse: true },
+  { name: "Willow Springs", layout: "Streets of Willow Springs", length_km: 2.5, category: "Short", hasReverse: true },
+  { name: "Yas Marina Circuit", layout: "Full Course (2021)", length_km: 5.3, category: "Medium" }
 ];
 
 // ═══════════════════════════════════════════════════════════════════════════
@@ -62,28 +98,44 @@ const CIRCUITS = [
 // ─── State ───────────────────────────────────────────────────────────────────
 let activeCategory = 'All';
 let isAnimating = false;
+let lastRollResult = null;
 
 // ─── DOM References ──────────────────────────────────────────────────────────
-const filterBtns    = document.querySelectorAll('.filter-btn');
-const rollBtn       = document.getElementById('roll-btn');
-const resultCard    = document.getElementById('result-card');
-const slotDisplay   = document.getElementById('slot-display');
-const trackName     = document.getElementById('track-name');
-const trackLayout   = document.getElementById('track-layout');
-const trackLength   = document.getElementById('track-length');
+const filterBtns = document.querySelectorAll('.filter-btn');
+const rollBtn = document.getElementById('roll-btn');
+const resultCard = document.getElementById('result-card');
+const slotDisplay = document.getElementById('slot-display');
+const trackName = document.getElementById('track-name');
+const trackLayout = document.getElementById('track-layout');
+const trackLength = document.getElementById('track-length');
 const trackCategory = document.getElementById('track-category');
 const reverseToggle = document.getElementById('reverse-toggle');
-const poolCount     = document.getElementById('pool-count');
-const emptyState    = document.getElementById('empty-state');
+const rallyToggle = document.getElementById('rally-toggle');
+const poolCount = document.getElementById('pool-count');
+const emptyState = document.getElementById('empty-state');
+const btnWhatsAppShareRandom = document.getElementById('btn-whatsapp-share-random');
 
 // ─── Helpers ─────────────────────────────────────────────────────────────────
 function getFilteredPool() {
   let pool = [...CIRCUITS];
-  if (activeCategory !== 'All') pool = pool.filter(c => c.category === activeCategory);
-  if (reverseToggle && reverseToggle.checked) {
-    const rev = pool.map(c => ({ ...c, layout: c.layout + ' (Reverse)', isReverse: true }));
-    pool = [...pool, ...rev];
+
+  // 1. Filter by Rally
+  const isRallyChecked = rallyToggle && rallyToggle.checked;
+  pool = pool.filter(c => isRallyChecked ? true : !c.isRally);
+
+  // 2. Filter by Category
+  if (activeCategory !== 'All') {
+    pool = pool.filter(c => c.category === activeCategory);
   }
+
+  // 3. Handle Reverse Layouts (Only for tracks that support it)
+  if (reverseToggle && reverseToggle.checked) {
+    const revs = pool
+      .filter(c => c.hasReverse)
+      .map(c => ({ ...c, layout: c.layout + ' (Reverse)', isReverse: true }));
+    pool = [...pool, ...revs];
+  }
+
   return pool;
 }
 
@@ -118,24 +170,24 @@ function runSlotAnimation(finalCircuit, pool, slotEl) {
   return new Promise(resolve => {
     slotEl.classList.add('visible');
 
-    const DURATION      = 1500;
-    const START_INT     = 50;
-    const END_INT       = 160;
-    const start         = performance.now();
+    const DURATION = 1500;
+    const START_INT = 50;
+    const END_INT = 160;
+    const start = performance.now();
 
     function tick(now) {
-      const elapsed  = now - start;
+      const elapsed = now - start;
       const progress = Math.min(elapsed / DURATION, 1);
       const interval = START_INT + (END_INT - START_INT) * (progress ** 2);
 
       if (progress < 1) {
         const random = pickRandom(pool);
         slotEl.textContent = `${random.name} — ${random.layout}`;
-        slotEl.style.color  = getCategoryColor(random.category);
+        slotEl.style.color = getCategoryColor(random.category);
         setTimeout(() => requestAnimationFrame(tick), interval);
       } else {
         slotEl.textContent = `${finalCircuit.name} — ${finalCircuit.layout}`;
-        slotEl.style.color  = getCategoryColor(finalCircuit.category);
+        slotEl.style.color = getCategoryColor(finalCircuit.category);
         setTimeout(() => {
           slotEl.classList.remove('visible');
           resolve();
@@ -160,21 +212,30 @@ rollBtn.addEventListener('click', async () => {
   const chosen = pickRandom(pool);
   await runSlotAnimation(chosen, pool, slotDisplay);
 
-  trackName.textContent     = chosen.name;
-  trackLayout.textContent   = chosen.layout;
-  trackLength.textContent   = chosen.length_km.toFixed(1) + ' km';
+  trackName.textContent = chosen.name;
+  trackLayout.textContent = chosen.layout;
+  trackLength.textContent = chosen.length_km.toFixed(1) + ' km';
   trackCategory.textContent = chosen.category;
 
   const catEl = document.getElementById('track-category');
   catEl.style.setProperty('--cat-color', getCategoryColor(chosen.category));
 
   resultCard.classList.add('visible');
+  lastRollResult = chosen;
+
   isAnimating = false;
   rollBtn.disabled = false;
   rollBtn.classList.remove('rolling');
 });
 
+if (btnWhatsAppShareRandom) {
+  btnWhatsAppShareRandom.addEventListener('click', () => {
+    if (lastRollResult) shareTrackToWhatsApp(lastRollResult);
+  });
+}
+
 reverseToggle && reverseToggle.addEventListener('change', updatePoolCount);
+rallyToggle && rallyToggle.addEventListener('change', updatePoolCount);
 updatePoolCount();
 
 // ─── Service Worker Registration ─────────────────────────────────────────────
@@ -229,11 +290,11 @@ function createSeasonObj(name, raceCount, selectedCircuits) {
 // ═══════════════════════════════════════════════════════════════════════════
 
 const views = {
-  randomizer:    document.getElementById('view-randomizer'),
-  seasons:       document.getElementById('view-seasons'),
-  createSeason:  document.getElementById('view-create-season'),
-  seasonDetail:  document.getElementById('view-season-detail'),
-  sharedSeason:  document.getElementById('view-shared-season'),
+  randomizer: document.getElementById('view-randomizer'),
+  seasons: document.getElementById('view-seasons'),
+  createSeason: document.getElementById('view-create-season'),
+  seasonDetail: document.getElementById('view-season-detail'),
+  sharedSeason: document.getElementById('view-shared-season'),
 };
 
 function showView(name) {
@@ -243,14 +304,14 @@ function showView(name) {
 
 // ─── Init: check URL for shared season param ─────────────────────────────────
 (function initURLCheck() {
-  const params      = new URLSearchParams(window.location.search);
+  const params = new URLSearchParams(window.location.search);
   const seasonParam = params.get('season');
   if (seasonParam) tryLoadSharedSeason(seasonParam);
 })();
 
 // ─── Nav Tabs ─────────────────────────────────────────────────────────────────
 const navRandomizer = document.getElementById('nav-randomizer');
-const navSeasons    = document.getElementById('nav-seasons');
+const navSeasons = document.getElementById('nav-seasons');
 
 navRandomizer.addEventListener('click', () => {
   navRandomizer.setAttribute('aria-pressed', 'true');
@@ -273,7 +334,7 @@ navSeasons.addEventListener('click', () => {
 //  SEASONS DASHBOARD
 // ═══════════════════════════════════════════════════════════════════════════
 
-const seasonsList  = document.getElementById('seasons-list');
+const seasonsList = document.getElementById('seasons-list');
 const seasonsEmpty = document.getElementById('seasons-empty');
 const btnOpenCreate = document.getElementById('btn-open-create');
 
@@ -294,8 +355,8 @@ function renderSeasonsDashboard() {
 
   seasons.forEach(season => {
     const completed = season.circuits.filter(c => c.completed).length;
-    const total     = season.circuits.length;
-    const pct       = total > 0 ? Math.round((completed / total) * 100) : 0;
+    const total = season.circuits.length;
+    const pct = total > 0 ? Math.round((completed / total) * 100) : 0;
 
     const card = document.createElement('div');
     card.className = 'season-card';
@@ -327,30 +388,30 @@ function renderSeasonsDashboard() {
 
 const createStep1 = document.getElementById('create-step-1');
 const createStep2 = document.getElementById('create-step-2');
-const seasonNameInput      = document.getElementById('season-name-input');
+const seasonNameInput = document.getElementById('season-name-input');
 const seasonRaceCountInput = document.getElementById('season-race-count-input');
-const btnGoToStep2         = document.getElementById('btn-go-to-step2');
-const btnBackFromCreate    = document.getElementById('btn-back-from-create');
-const btnBackToStep1       = document.getElementById('btn-back-to-step1');
-const btnSaveSeason        = document.getElementById('btn-save-season');
-const trackSelectList      = document.getElementById('track-select-list');
-const trackSelectCount     = document.getElementById('track-select-count');
-const trackSelectTarget    = document.getElementById('track-select-target');
-const createStep1Error     = document.getElementById('create-step1-error');
-const createStep2Error     = document.getElementById('create-step2-error');
-const createStep2Title     = document.getElementById('create-step2-title');
+const btnGoToStep2 = document.getElementById('btn-go-to-step2');
+const btnBackFromCreate = document.getElementById('btn-back-from-create');
+const btnBackToStep1 = document.getElementById('btn-back-to-step1');
+const btnSaveSeason = document.getElementById('btn-save-season');
+const trackSelectList = document.getElementById('track-select-list');
+const trackSelectCount = document.getElementById('track-select-count');
+const trackSelectTarget = document.getElementById('track-select-target');
+const createStep1Error = document.getElementById('create-step1-error');
+const createStep2Error = document.getElementById('create-step2-error');
+const createStep2Title = document.getElementById('create-step2-title');
 
 let createTargetCount = 0;
 let createSelectedIds = new Set(); // indices into CIRCUITS
 
 function openCreateFlow() {
   // Reset form
-  seasonNameInput.value       = '';
-  seasonRaceCountInput.value  = '';
+  seasonNameInput.value = '';
+  seasonRaceCountInput.value = '';
   createStep1Error.textContent = '';
   createStep2Error.textContent = '';
-  createStep1.style.display   = 'flex';
-  createStep2.style.display   = 'none';
+  createStep1.style.display = 'flex';
+  createStep2.style.display = 'none';
   createSelectedIds.clear();
   showView('createSeason');
 }
@@ -366,7 +427,7 @@ btnBackToStep1.addEventListener('click', () => {
 });
 
 btnGoToStep2.addEventListener('click', () => {
-  const name  = seasonNameInput.value.trim();
+  const name = seasonNameInput.value.trim();
   const count = parseInt(seasonRaceCountInput.value, 10);
 
   createStep1Error.textContent = '';
@@ -385,9 +446,9 @@ btnGoToStep2.addEventListener('click', () => {
 
   createStep2Title.textContent = `Pick ${count} Circuit${count !== 1 ? 's' : ''}`;
   trackSelectTarget.textContent = count;
-  trackSelectCount.textContent  = 0;
+  trackSelectCount.textContent = 0;
   btnSaveSeason.disabled = true;
-  createStep2Error.textContent  = '';
+  createStep2Error.textContent = '';
 
   renderTrackSelectList();
 
@@ -400,12 +461,12 @@ function renderTrackSelectList() {
 
   CIRCUITS.forEach((circuit, idx) => {
     const isSelected = createSelectedIds.has(idx);
-    const isMaxed    = !isSelected && createSelectedIds.size >= createTargetCount;
+    const isMaxed = !isSelected && createSelectedIds.size >= createTargetCount;
 
     const item = document.createElement('div');
     item.className = 'track-select-item' +
       (isSelected ? ' selected' : '') +
-      (isMaxed    ? ' disabled-max' : '');
+      (isMaxed ? ' disabled-max' : '');
     item.setAttribute('role', 'checkbox');
     item.setAttribute('aria-checked', isSelected ? 'true' : 'false');
     item.setAttribute('tabindex', isMaxed && !isSelected ? '-1' : '0');
@@ -447,9 +508,9 @@ btnSaveSeason.addEventListener('click', () => {
     return;
   }
 
-  const name      = seasonNameInput.value.trim();
-  const selected  = [...createSelectedIds].map(i => CIRCUITS[i]);
-  const season    = createSeasonObj(name, createTargetCount, selected);
+  const name = seasonNameInput.value.trim();
+  const selected = [...createSelectedIds].map(i => CIRCUITS[i]);
+  const season = createSeasonObj(name, createTargetCount, selected);
 
   const seasons = loadSeasons();
   seasons.push(season);
@@ -469,21 +530,21 @@ btnSaveSeason.addEventListener('click', () => {
 //  SEASON DETAIL VIEW
 // ═══════════════════════════════════════════════════════════════════════════
 
-const detailSeasonName    = document.getElementById('detail-season-name');
-const detailProgressBar   = document.getElementById('detail-progress-bar');
+const detailSeasonName = document.getElementById('detail-season-name');
+const detailProgressBar = document.getElementById('detail-progress-bar');
 const detailProgressLabel = document.getElementById('detail-progress-label');
-const seasonCircuitsList  = document.getElementById('season-circuits-list');
-const seasonRollBtn       = document.getElementById('season-roll-btn');
-const seasonSlotDisplay   = document.getElementById('season-slot-display');
-const seasonResultCard    = document.getElementById('season-result-card');
-const seasonTrackName     = document.getElementById('season-track-name');
-const seasonTrackLayout   = document.getElementById('season-track-layout');
-const seasonTrackLength   = document.getElementById('season-track-length');
+const seasonCircuitsList = document.getElementById('season-circuits-list');
+const seasonRollBtn = document.getElementById('season-roll-btn');
+const seasonSlotDisplay = document.getElementById('season-slot-display');
+const seasonResultCard = document.getElementById('season-result-card');
+const seasonTrackName = document.getElementById('season-track-name');
+const seasonTrackLayout = document.getElementById('season-track-layout');
+const seasonTrackLength = document.getElementById('season-track-length');
 const seasonTrackCategory = document.getElementById('season-track-category');
-const seasonEmptyState    = document.getElementById('season-empty-state');
-const btnBackFromDetail   = document.getElementById('btn-back-from-detail');
-const btnResetSeason      = document.getElementById('btn-reset-season');
-const btnDeleteSeason     = document.getElementById('btn-delete-season');
+const seasonEmptyState = document.getElementById('season-empty-state');
+const btnBackFromDetail = document.getElementById('btn-back-from-detail');
+const btnResetSeason = document.getElementById('btn-reset-season');
+const btnDeleteSeason = document.getElementById('btn-delete-season');
 
 let currentSeasonId = null;
 let isSeasonAnimating = false;
@@ -506,16 +567,16 @@ function openSeasonDetail(seasonId) {
 
 function renderSeasonDetail() {
   const seasons = loadSeasons();
-  const season  = seasons.find(s => s.id === currentSeasonId);
+  const season = seasons.find(s => s.id === currentSeasonId);
   if (!season) { showView('seasons'); return; }
 
   const completed = season.circuits.filter(c => c.completed).length;
-  const total     = season.circuits.length;
-  const pct       = total > 0 ? Math.round((completed / total) * 100) : 0;
+  const total = season.circuits.length;
+  const pct = total > 0 ? Math.round((completed / total) * 100) : 0;
   const remaining = total - completed;
 
-  detailSeasonName.textContent    = season.name;
-  detailProgressBar.style.width   = `${pct}%`;
+  detailSeasonName.textContent = season.name;
+  detailProgressBar.style.width = `${pct}%`;
   detailProgressLabel.textContent = `${completed} / ${total} completed (${pct}%)`;
 
   // Roll button state
@@ -560,7 +621,7 @@ function renderSeasonDetail() {
 
 function toggleCircuitComplete(circuitIdx) {
   const seasons = loadSeasons();
-  const season  = seasons.find(s => s.id === currentSeasonId);
+  const season = seasons.find(s => s.id === currentSeasonId);
   if (!season) return;
 
   season.circuits[circuitIdx].completed = !season.circuits[circuitIdx].completed;
@@ -573,7 +634,7 @@ seasonRollBtn.addEventListener('click', async () => {
   if (isSeasonAnimating) return;
 
   const seasons = loadSeasons();
-  const season  = seasons.find(s => s.id === currentSeasonId);
+  const season = seasons.find(s => s.id === currentSeasonId);
   if (!season) return;
 
   const remaining = season.circuits.filter(c => !c.completed);
@@ -595,9 +656,9 @@ seasonRollBtn.addEventListener('click', async () => {
   }
 
   // Show result card
-  seasonTrackName.textContent     = chosen.name;
-  seasonTrackLayout.textContent   = chosen.layout;
-  seasonTrackLength.textContent   = chosen.length_km.toFixed(1) + ' km';
+  seasonTrackName.textContent = chosen.name;
+  seasonTrackLayout.textContent = chosen.layout;
+  seasonTrackLength.textContent = chosen.length_km.toFixed(1) + ' km';
   seasonTrackCategory.textContent = chosen.category;
 
   const seasonCatEl = document.getElementById('season-track-category');
@@ -619,7 +680,7 @@ seasonRollBtn.addEventListener('click', async () => {
 btnResetSeason.addEventListener('click', () => {
   if (!confirm('Reset all circuits in this season? Progress will be lost.')) return;
   const seasons = loadSeasons();
-  const season  = seasons.find(s => s.id === currentSeasonId);
+  const season = seasons.find(s => s.id === currentSeasonId);
   if (!season) return;
   season.circuits.forEach(c => c.completed = false);
   saveSeasons(seasons);
@@ -665,12 +726,12 @@ function showToast(message) {
 // ─── WhatsApp Track Share ─────────────────────────────────────────────────────
 function shareTrackToWhatsApp(circuit) {
   const msg = [
-    '🏁 RACE DAY ANNOUNCEMENT 🏁',
+    '🏁 RTW RACE DAY ANNOUNCEMENT 🏁',
     '',
     `Tonight's track is: ${circuit.name} — ${circuit.layout}!`,
     `Length: ${circuit.length_km.toFixed(1)} km  |  Category: ${circuit.category}`,
     '',
-    'Get your cars ready! 🏎️💨'
+    'Get ready! 🏎️💨'
   ].join('\n');
 
   if (navigator.share) {
@@ -692,7 +753,7 @@ const btnShareSeason = document.getElementById('btn-share-season');
 if (btnShareSeason) {
   btnShareSeason.addEventListener('click', () => {
     const seasons = loadSeasons();
-    const season  = seasons.find(s => s.id === currentSeasonId);
+    const season = seasons.find(s => s.id === currentSeasonId);
     if (!season) return;
 
     let encoded;
@@ -740,18 +801,18 @@ function tryLoadSharedSeason(encoded) {
 
 function renderSharedSeasonView(season) {
   const completed = season.circuits.filter(c => c.completed).length;
-  const total     = season.circuits.length;
-  const pct       = total > 0 ? Math.round((completed / total) * 100) : 0;
+  const total = season.circuits.length;
+  const pct = total > 0 ? Math.round((completed / total) * 100) : 0;
 
-  const nameEl   = document.getElementById('shared-season-name');
-  const barEl    = document.getElementById('shared-progress-bar');
-  const labelEl  = document.getElementById('shared-progress-label');
-  const listEl   = document.getElementById('shared-circuits-list');
-  const homeBtn  = document.getElementById('btn-shared-home');
+  const nameEl = document.getElementById('shared-season-name');
+  const barEl = document.getElementById('shared-progress-bar');
+  const labelEl = document.getElementById('shared-progress-label');
+  const listEl = document.getElementById('shared-circuits-list');
+  const homeBtn = document.getElementById('btn-shared-home');
 
-  if (nameEl)  nameEl.textContent    = season.name;
-  if (barEl)   barEl.style.width     = `${pct}%`;
-  if (labelEl) labelEl.textContent   = `${completed} / ${total} completed (${pct}%)`;
+  if (nameEl) nameEl.textContent = season.name;
+  if (barEl) barEl.style.width = `${pct}%`;
+  if (labelEl) labelEl.textContent = `${completed} / ${total} completed (${pct}%)`;
 
   if (listEl) {
     listEl.innerHTML = '';
