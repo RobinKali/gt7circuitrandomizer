@@ -1,7 +1,11 @@
 // ═══════════════════════════════════════════════════════════════════════════
 //  GT7 Random Circuit Selector — app.js
-//  Includes: Standard Randomizer + Race Seasons (localStorage)
+//  Includes: Standard Randomizer + Race Seasons + Car Class Randomizer
 // ═══════════════════════════════════════════════════════════════════════════
+
+// ─── Car Class Data ───────────────────────────────────────────────────────────
+const carClasses = ["Gr.1", "Gr.2", "Gr.3", "Gr.4", "Gr.B", "Road Car", "Hypercar", "GT500", "VGT", "Kart", "Electric Car"];
+const carClassesGTOnly = ["Gr.1", "Gr.2", "Gr.3", "Gr.4"];
 
 // ─── Circuit Database ────────────────────────────────────────────────────────
 const CIRCUITS = [
@@ -295,6 +299,7 @@ const views = {
   createSeason: document.getElementById('view-create-season'),
   seasonDetail: document.getElementById('view-season-detail'),
   sharedSeason: document.getElementById('view-shared-season'),
+  carClass: document.getElementById('view-carclass'),
 };
 
 function showView(name) {
@@ -312,22 +317,29 @@ function showView(name) {
 // ─── Nav Tabs ─────────────────────────────────────────────────────────────────
 const navRandomizer = document.getElementById('nav-randomizer');
 const navSeasons = document.getElementById('nav-seasons');
+const navCarClass = document.getElementById('nav-carclass');
+
+function setActiveNav(activeEl) {
+  [navRandomizer, navSeasons, navCarClass].forEach(el => {
+    el.classList.toggle('active', el === activeEl);
+    el.setAttribute('aria-pressed', el === activeEl ? 'true' : 'false');
+  });
+}
 
 navRandomizer.addEventListener('click', () => {
-  navRandomizer.setAttribute('aria-pressed', 'true');
-  navSeasons.setAttribute('aria-pressed', 'false');
-  navRandomizer.classList.add('active');
-  navSeasons.classList.remove('active');
+  setActiveNav(navRandomizer);
   showView('randomizer');
 });
 
 navSeasons.addEventListener('click', () => {
-  navSeasons.setAttribute('aria-pressed', 'true');
-  navRandomizer.setAttribute('aria-pressed', 'false');
-  navSeasons.classList.add('active');
-  navRandomizer.classList.remove('active');
+  setActiveNav(navSeasons);
   showView('seasons');
   renderSeasonsDashboard();
+});
+
+navCarClass.addEventListener('click', () => {
+  setActiveNav(navCarClass);
+  showView('carClass');
 });
 
 // ═══════════════════════════════════════════════════════════════════════════
@@ -436,8 +448,8 @@ btnGoToStep2.addEventListener('click', () => {
     createStep1Error.textContent = '⚠ Please enter a season name.';
     return;
   }
-  if (!count || count < 1 || count > CIRCUITS.length) {
-    createStep1Error.textContent = `⚠ Number of races must be between 1 and ${CIRCUITS.length}.`;
+  if (!count || count < 1 || count > 24) {
+    createStep1Error.textContent = `⚠ Number of races must be between 1 and 24.`;
     return;
   }
 
@@ -520,10 +532,7 @@ btnSaveSeason.addEventListener('click', () => {
   renderSeasonsDashboard();
 
   // Switch nav tab to seasons
-  navSeasons.classList.add('active');
-  navRandomizer.classList.remove('active');
-  navSeasons.setAttribute('aria-pressed', 'true');
-  navRandomizer.setAttribute('aria-pressed', 'false');
+  setActiveNav(navSeasons);
 });
 
 // ═══════════════════════════════════════════════════════════════════════════
@@ -697,8 +706,7 @@ btnDeleteSeason.addEventListener('click', () => {
   currentSeasonId = null;
   showView('seasons');
   renderSeasonsDashboard();
-  navSeasons.classList.add('active');
-  navRandomizer.classList.remove('active');
+  setActiveNav(navSeasons);
 });
 
 // ═══════════════════════════════════════════════════════════════════════════
@@ -872,4 +880,99 @@ function renderSharedSeasonView(season) {
       location.reload();
     });
   }
+}
+
+// ═══════════════════════════════════════════════════════════════════════════
+//  CAR CLASS RANDOMIZER
+// ═══════════════════════════════════════════════════════════════════════════
+
+// ─── DOM References ──────────────────────────────────────────────────────────
+const carclassRollBtn   = document.getElementById('carclass-roll-btn');
+const carclassSlot      = document.getElementById('carclass-slot-display');
+const carclassResultCard = document.getElementById('carclass-result-card');
+const carclassNameEl    = document.getElementById('carclass-name');
+const gtOnlyToggle      = document.getElementById('gt-only-toggle');
+const btnShareCarClass  = document.getElementById('btn-share-carclass');
+
+let isCarClassAnimating = false;
+let lastCarClassResult  = null;
+
+// ─── Slot animation for strings ──────────────────────────────────────────────
+function runCarClassSlot(finalClass, pool, slotEl) {
+  return new Promise(resolve => {
+    slotEl.classList.add('visible');
+
+    const DURATION = 1500;
+    const START_INT = 50;
+    const END_INT   = 160;
+    const start     = performance.now();
+
+    const ACCENT = '#f0c040'; // gold for car classes
+
+    function tick(now) {
+      const elapsed  = now - start;
+      const progress = Math.min(elapsed / DURATION, 1);
+      const interval = START_INT + (END_INT - START_INT) * (progress ** 2);
+
+      if (progress < 1) {
+        slotEl.textContent = pool[Math.floor(Math.random() * pool.length)];
+        slotEl.style.color  = ACCENT;
+        setTimeout(() => requestAnimationFrame(tick), interval);
+      } else {
+        slotEl.textContent = finalClass;
+        slotEl.style.color  = ACCENT;
+        setTimeout(() => {
+          slotEl.classList.remove('visible');
+          resolve();
+        }, 200);
+      }
+    }
+    requestAnimationFrame(tick);
+  });
+}
+
+// ─── Roll Logic ───────────────────────────────────────────────────────────────
+carclassRollBtn.addEventListener('click', async () => {
+  if (isCarClassAnimating) return;
+
+  const pool = gtOnlyToggle && gtOnlyToggle.checked ? carClassesGTOnly : carClasses;
+  const chosen = pool[Math.floor(Math.random() * pool.length)];
+
+  isCarClassAnimating = true;
+  carclassRollBtn.disabled = true;
+  carclassRollBtn.classList.add('rolling');
+
+  await runCarClassSlot(chosen, pool, carclassSlot);
+
+  carclassNameEl.textContent = chosen;
+  carclassResultCard.classList.add('visible');
+  lastCarClassResult = chosen;
+
+  isCarClassAnimating = false;
+  carclassRollBtn.disabled = false;
+  carclassRollBtn.classList.remove('rolling');
+});
+
+// ─── Share ────────────────────────────────────────────────────────────────────
+if (btnShareCarClass) {
+  btnShareCarClass.addEventListener('click', () => {
+    if (!lastCarClassResult) return;
+    const msg = [
+      '🏎️ RTW CAR CLASS ANNOUNCEMENT 🏎️',
+      '',
+      `Tonight's car class is: ${lastCarClassResult}!`,
+      '',
+      'Get your car ready! 💨'
+    ].join('\n');
+
+    if (navigator.share) {
+      navigator.share({
+        title: 'GT7 Car Class!',
+        text: msg,
+        url: window.location.origin
+      }).catch(() => openWhatsAppURL(msg));
+    } else {
+      openWhatsAppURL(msg);
+    }
+  });
 }

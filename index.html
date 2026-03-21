@@ -8,8 +8,7 @@
 
   <!-- ── Primary SEO ─────────────────────────────────────────────────────── -->
   <title>GTTraxx — GT7 Random Track Selector</title>
-  <meta name="description"
-    content="Can't decide where to race in Gran Turismo 7? Use GTTraxx to pick your next track by length or layout." />
+  <meta name="description" content="Use GTTraxx to plan your next race in Gran Turismo 7." />
   <meta name="robots" content="index, follow" />
   <link rel="canonical" href="https://gttraxx.robinkali.nl/" />
 
@@ -17,8 +16,7 @@
   <meta property="og:type" content="website" />
   <meta property="og:url" content="https://gttraxx.robinkali.nl/" />
   <meta property="og:title" content="GTTraxx — GT7 Random Track Selector" />
-  <meta property="og:description"
-    content="Can't decide where to race in Gran Turismo 7? Use GTTraxx to pick your next track by length or layout." />
+  <meta property="og:description" content="Use GTTraxx to plan your next race in Gran Turismo 7." />
   <meta property="og:image" content="https://gttraxx.robinkali.nl/og-image.png" />
   <meta property="og:image:width" content="1200" />
   <meta property="og:image:height" content="630" />
@@ -29,8 +27,7 @@
   <!-- ── Twitter Card ────────────────────────────────────────────────────── -->
   <meta name="twitter:card" content="summary_large_image" />
   <meta name="twitter:title" content="GTTraxx — GT7 Random Track Selector" />
-  <meta name="twitter:description"
-    content="Can't decide where to race in Gran Turismo 7? Use GTTraxx to pick your next track." />
+  <meta name="twitter:description" content="Use GTTraxx to plan your next race in Gran Turismo 7." />
   <meta name="twitter:image" content="https://gttraxx.robinkali.nl/og-image.png" />
   <meta name="twitter:image:alt" content="GTTraxx dashboard" />
 
@@ -70,7 +67,7 @@
         </div>
       </div>
       <h1 class="site-title"><span class="logo-gt">GT</span><span class="logo-traxx">Traxx</span></h1>
-      <p class="site-subtitle">Gran Turismo 7 · Random Track Selector</p>
+      <p class="site-subtitle">Gran Turismo 7 · Random Track and Car Selector</p>
     </div>
   </header>
 
@@ -80,11 +77,15 @@
   <nav class="main-nav" role="navigation" aria-label="Main navigation">
     <button class="nav-tab active" id="nav-randomizer" type="button" aria-pressed="true">
       <span class="nav-tab-icon" aria-hidden="true">🎲</span>
-      <span>Randomizer</span>
+      <span>Traxx</span>
     </button>
     <button class="nav-tab" id="nav-seasons" type="button" aria-pressed="false">
       <span class="nav-tab-icon" aria-hidden="true">🏆</span>
-      <span>Race Seasons</span>
+      <span>Seasons</span>
+    </button>
+    <button class="nav-tab" id="nav-carclass" type="button" aria-pressed="false">
+      <span class="nav-tab-icon" aria-hidden="true">🎲</span>
+      <span>Cars</span>
     </button>
   </nav>
 
@@ -263,7 +264,7 @@
           <div class="form-group">
             <label class="form-label" for="season-race-count-input">Number of Races</label>
             <input type="number" id="season-race-count-input" class="form-input" placeholder="Bijv. 7" min="1"
-              max="16" />
+              max="24" />
           </div>
 
           <button class="btn-primary" id="btn-go-to-step2" type="button">
@@ -422,6 +423,57 @@
       </div>
     </div><!-- /#view-shared-season -->
 
+    <!-- ─────────────────────────────────────────────────────────────────────
+         VIEW: CAR CLASS RANDOMIZER
+    ──────────────────────────────────────────────────────────────────────── -->
+    <div id="view-carclass" class="view">
+      <div class="page-wrapper">
+
+        <!-- ── GT Only Toggle ─────────────────────────────────────────── -->
+        <div class="options-container">
+          <div class="options-row" role="group" aria-label="Car class options">
+            <label class="toggle-label" for="gt-only-toggle">
+              <input type="checkbox" id="gt-only-toggle" aria-describedby="gt-only-desc" />
+              <span class="toggle-track" aria-hidden="true"></span>
+              <span class="toggle-text">
+                <strong>GT Only</strong>
+                <span id="gt-only-desc">Limits pool to Gr.1, Gr.2, Gr.3 and Gr.4</span>
+              </span>
+            </label>
+          </div>
+        </div>
+
+        <!-- ── Roll Button ────────────────────────────────────────────── -->
+        <section class="roll-section" aria-label="Car Class Randomizer">
+          <button id="carclass-roll-btn" type="button" aria-label="Roll a random car class"
+            aria-describedby="carclass-slot-display">
+            <span class="btn-dice" aria-hidden="true">🎲</span>
+            <span class="btn-text">Roll Car Class</span>
+          </button>
+        </section>
+
+        <!-- ── Slot Machine Display ───────────────────────────────────── -->
+        <div aria-live="polite" aria-atomic="true">
+          <p id="carclass-slot-display" role="status"></p>
+        </div>
+
+        <!-- ── Result ────────────────────────────────────────────────── -->
+        <article id="carclass-result-card" aria-label="Selected car class" aria-live="polite">
+          <div class="card-header">
+            <div class="card-header-dot" aria-hidden="true"></div>
+            <span class="card-header-label">Selected Car Class</span>
+          </div>
+          <div class="card-body">
+            <h2 id="carclass-name" class="carclass-name-display"></h2>
+            <button class="btn-whatsapp-share" id="btn-share-carclass" type="button">
+              <span>📲 Share</span>
+            </button>
+          </div>
+        </article>
+
+      </div>
+    </div><!-- /#view-carclass -->
+
   </main>
 
   <!-- ══════════════════════════════════════════════════════════════════════
@@ -440,7 +492,7 @@
   </footer>
 
   <!-- ── App Script ──────────────────────────────────────────────────────── -->
-  <script src="app.js?v=6" defer></script>
+  <script src="app.js?v=7" defer></script>
 
   <!-- ── PWA Install Prompt Handler ────────────────────────────────────── -->
   <script>

@@ -1743,3 +1743,143 @@ footer {
 .btn-cta-home:active {
   transform: translateY(0) scale(0.98);
 }
+
+/* ═══════════════════════════════════════════════════════════════════════════
+   CAR CLASS RANDOMIZER — Styles
+═══════════════════════════════════════════════════════════════════════════ */
+
+/* ─── Roll Button (gold variant) ─────────────────────────────────────────────── */
+#carclass-roll-btn {
+  position: relative;
+  width: 100%;
+  padding: 1.1rem 2rem;
+  background: linear-gradient(135deg, #a07010 0%, #cc9000 50%, #f0c040 100%);
+  border: none;
+  border-radius: var(--radius-lg);
+  color: #0a0a0f;
+  font-family: 'Montserrat', sans-serif;
+  font-size: 1.05rem;
+  font-weight: 800;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  cursor: pointer;
+  transition: all 0.2s var(--ease-out-expo);
+  overflow: hidden;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 0.6rem;
+  -webkit-tap-highlight-color: transparent;
+  user-select: none;
+  box-shadow: 0 4px 24px rgba(204, 144, 0, 0.5), 0 1px 0 rgba(255, 255, 255, 0.2) inset;
+}
+
+#carclass-roll-btn::before {
+  content: '';
+  position: absolute;
+  inset: 0;
+  background: linear-gradient(135deg, rgba(255, 255, 255, 0.18) 0%, transparent 60%);
+  pointer-events: none;
+}
+
+#carclass-roll-btn::after {
+  content: '';
+  position: absolute;
+  top: -50%;
+  left: -60%;
+  width: 40%;
+  height: 200%;
+  background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.3), transparent);
+  transform: skewX(-15deg);
+  transition: left 0.5s ease;
+}
+
+#carclass-roll-btn:hover::after {
+  left: 120%;
+}
+
+#carclass-roll-btn:hover:not(:disabled) {
+  transform: translateY(-2px);
+  box-shadow: 0 8px 32px rgba(204, 144, 0, 0.65), 0 1px 0 rgba(255, 255, 255, 0.2) inset;
+}
+
+#carclass-roll-btn:active:not(:disabled) {
+  transform: translateY(0px) scale(0.98);
+}
+
+#carclass-roll-btn:disabled {
+  cursor: not-allowed;
+  opacity: 0.7;
+}
+
+#carclass-roll-btn.rolling {
+  animation: carclass-btn-pulse 0.4s ease infinite alternate;
+}
+
+@keyframes carclass-btn-pulse {
+  from { box-shadow: 0 4px 24px rgba(204, 144, 0, 0.5); }
+  to   { box-shadow: 0 4px 40px rgba(240, 192, 64, 0.95), 0 0 60px rgba(240, 192, 64, 0.35); }
+}
+
+/* ─── Slot Display ───────────────────────────────────────────────────────────── */
+#carclass-slot-display {
+  display: none;
+  text-align: center;
+  padding: 1rem;
+  background: var(--bg-card);
+  border: 1px solid var(--border-subtle);
+  border-radius: var(--radius-md);
+  font-family: 'Montserrat', sans-serif;
+  font-size: clamp(1rem, 4vw, 1.3rem);
+  font-weight: 700;
+  letter-spacing: 0.02em;
+  color: var(--accent-gold);
+  transition: color 0.05s;
+}
+
+#carclass-slot-display.visible {
+  display: block;
+  animation: slot-flicker 0.08s step-end infinite;
+}
+
+/* ─── Result Card ────────────────────────────────────────────────────────────── */
+#carclass-result-card {
+  display: none;
+  flex-direction: column;
+  background: var(--bg-card);
+  border: 1px solid var(--border-subtle);
+  border-radius: var(--radius-xl);
+  overflow: hidden;
+  box-shadow: 0 8px 40px rgba(0, 0, 0, 0.6);
+}
+
+#carclass-result-card.visible {
+  display: flex;
+  animation: card-reveal 0.5s var(--ease-spring) forwards;
+}
+
+/* ─── Big Car Class Name ─────────────────────────────────────────────────────── */
+.carclass-name-display {
+  font-family: 'Montserrat', sans-serif;
+  font-size: clamp(2rem, 10vw, 3.2rem);
+  font-weight: 900;
+  letter-spacing: -0.02em;
+  line-height: 1.1;
+  color: var(--accent-gold);
+  text-align: center;
+  margin-bottom: 1.25rem;
+  text-shadow: 0 0 30px rgba(240, 192, 64, 0.4);
+}
+
+/* ─── Narrow nav: shrink label font so 3 tabs fit ────────────────────────────── */
+@media (max-width: 400px) {
+  .nav-tab {
+    font-size: 0.65rem;
+    padding: 0.65rem 0.35rem;
+    gap: 0.25rem;
+  }
+
+  .nav-tab .nav-tab-icon {
+    font-size: 0.85rem;
+  }
+}
