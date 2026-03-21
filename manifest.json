@@ -1,7 +1,7 @@
 {
-  "name": "GTTraxx — GT7 Random Track & Car Selector",
+  "name": "GTTraxx — GT7 Random Track and Car Selector & Season planner",
   "short_name": "GTTraxx",
-  "description": "Use GTTraxx to plan your next race in Gran Turismo 7.",
+  "description": "Use GTTraxx to plan & share your next race in Gran Turismo 7.",
   "start_url": "./",
   "display": "standalone",
   "orientation": "any",
@@ -40,10 +40,53 @@
   ],
   "screenshots": [
     {
-      "src": "og-image.png",
-      "sizes": "1200x630",
-      "type": "image/png",
-      "label": "GTTraxx Track Selector home screen"
+      "src": "screenshot-mobile.webp",
+      "sizes": "390x845",
+      "type": "image/webp",
+      "form_factor": "narrow",
+      "label": "GTTraxx Track Selector"
+    },
+    {
+      "src": "screenshot-mobile-2.webp",
+      "sizes": "390x845",
+      "type": "image/webp",
+      "form_factor": "narrow",
+      "label": "Race Seasons Dashboard"
+    },
+    {
+      "src": "screenshot-mobile-3.webp",
+      "sizes": "390x845",
+      "type": "image/webp",
+      "form_factor": "narrow",
+      "label": "Create New Season"
+    },
+    {
+      "src": "screenshot-mobile-4.webp",
+      "sizes": "390x845",
+      "type": "image/webp",
+      "form_factor": "narrow",
+      "label": "Car Class Randomizer"
+    },
+    {
+      "src": "screenshot-desktop.webp",
+      "sizes": "1280x720",
+      "type": "image/webp",
+      "form_factor": "wide",
+      "label": "GTTraxx Desktop Dashboard"
+    },
+    {
+      "src": "screenshot-desktop-2.webp",
+      "sizes": "1280x720",
+      "type": "image/webp",
+      "form_factor": "wide",
+      "label": "Season Planner"
+    },
+    {
+      "src": "screenshot-desktop-3.webp",
+      "sizes": "1280x720",
+      "type": "image/webp",
+      "form_factor": "wide",
+      "label": "Race Day Selection"
     }
   ]
 }

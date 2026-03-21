@@ -1,7 +1,7 @@
 // GT7 Random Circuit Selector — Service Worker
 // Cache-first strategy for full offline support
 
-const CACHE_NAME = 'gt7-randomizer-v8';
+const CACHE_NAME = 'gt7-randomizer-v9';
 const ASSETS_TO_CACHE = [
   './',
   './index.html',
@@ -13,6 +13,13 @@ const ASSETS_TO_CACHE = [
   './apple-touch-icon.png',
   './web-app-manifest-192x192.png',
   './web-app-manifest-512x512.png',
+  './screenshot-mobile.webp',
+  './screenshot-mobile-2.webp',
+  './screenshot-mobile-3.webp',
+  './screenshot-mobile-4.webp',
+  './screenshot-desktop.webp',
+  './screenshot-desktop-2.webp',
+  './screenshot-desktop-3.webp',
   'https://fonts.googleapis.com/css2?family=Montserrat:wght@300;400;600;700;900&family=Inter:wght@300;400;500;600&display=swap'
 ];
 
