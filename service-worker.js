@@ -1,7 +1,7 @@
 // GT7 Random Circuit Selector — Service Worker
 // Cache-first strategy for full offline support
 
-const CACHE_NAME = 'gt7-randomizer-v9';
+const CACHE_NAME = 'gt7-randomizer-v10';
 const ASSETS_TO_CACHE = [
   './',
   './index.html',
@@ -26,10 +26,16 @@ const ASSETS_TO_CACHE = [
 // ─── Install: pre-cache all assets ───────────────────────────────────────────
 self.addEventListener('install', event => {
   event.waitUntil(
-    caches.open(CACHE_NAME).then(cache => {
-      return cache.addAll(ASSETS_TO_CACHE);
-    }).then(() => self.skipWaiting())
+    caches.open(CACHE_NAME).then(cache => cache.addAll(ASSETS_TO_CACHE))
+    // No skipWaiting() here — the update banner controls when we activate
   );
+});
+
+// ─── Message: allow the page to trigger activation ───────────────────────────
+self.addEventListener('message', event => {
+  if (event.data && event.data.type === 'SKIP_WAITING') {
+    self.skipWaiting();
+  }
 });
 
 // ─── Activate: purge old caches ──────────────────────────────────────────────

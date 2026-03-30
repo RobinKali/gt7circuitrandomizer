@@ -242,12 +242,51 @@ reverseToggle && reverseToggle.addEventListener('change', updatePoolCount);
 rallyToggle && rallyToggle.addEventListener('change', updatePoolCount);
 updatePoolCount();
 
-// ─── Service Worker Registration ─────────────────────────────────────────────
+// ─── Service Worker Registration + Update Banner ─────────────────────────────
 if ('serviceWorker' in navigator) {
   window.addEventListener('load', () => {
-    navigator.serviceWorker.register('./service-worker.js')
-      .then(reg => console.log('[SW] Registered, scope:', reg.scope))
-      .catch(err => console.warn('[SW] Registration failed:', err));
+    navigator.serviceWorker.register('./service-worker.js').then(reg => {
+      console.log('[SW] Registered, scope:', reg.scope);
+
+      // Helper: show the update banner and wire up the update button
+      function offerUpdate(waitingSW) {
+        const banner = document.getElementById('update-banner');
+        const btn    = document.getElementById('update-btn');
+        if (!banner || !btn) return;
+
+        banner.classList.add('show');
+
+        btn.addEventListener('click', () => {
+          // Tell the waiting SW to activate immediately
+          waitingSW.postMessage({ type: 'SKIP_WAITING' });
+        }, { once: true });
+      }
+
+      // Case 1: a new SW is already waiting when the page loads
+      if (reg.waiting) {
+        offerUpdate(reg.waiting);
+      }
+
+      // Case 2: a new SW installs while the page is open
+      reg.addEventListener('updatefound', () => {
+        const newSW = reg.installing;
+        newSW.addEventListener('statechange', () => {
+          if (newSW.state === 'installed' && navigator.serviceWorker.controller) {
+            offerUpdate(newSW);
+          }
+        });
+      });
+
+      // Case 3: once the new SW takes control, reload so users get fresh content
+      let refreshing = false;
+      navigator.serviceWorker.addEventListener('controllerchange', () => {
+        if (!refreshing) {
+          refreshing = true;
+          window.location.reload();
+        }
+      });
+
+    }).catch(err => console.warn('[SW] Registration failed:', err));
   });
 }
 
