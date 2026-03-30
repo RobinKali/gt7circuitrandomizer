@@ -106,11 +106,6 @@
           <button id="install-btn" type="button">Install</button>
         </div>
 
-        <!-- ── App Update Banner ───────────────────────────────────────── -->
-        <div class="update-banner" id="update-banner" role="status" aria-live="polite">
-          <span>🚀 <strong>Update Available</strong><br />A new version of GTTraxx is ready.</span>
-          <button id="update-btn" type="button">Update</button>
-        </div>
 
         <!-- ── Category Filter ────────────────────────────────────────────── -->
         <section class="filter-section" aria-labelledby="filter-label">
@@ -547,6 +542,12 @@
       });
     })();
   </script>
+
+  <!-- Global update snackbar — fixed at bottom, visible on all tabs -->
+  <div class="update-banner" id="update-banner" role="status" aria-live="polite">
+    <span>🚀 <strong>Update Available!</strong> A new version of GTTraxx is ready.</span>
+    <button id="update-btn" type="button">Update</button>
+  </div>
 
   <!-- Toast notification -->
   <div id="toast" role="status" aria-live="polite"></div>

@@ -264,11 +264,13 @@ if ('serviceWorker' in navigator) {
         const banner = document.getElementById('update-banner');
         const btn    = document.getElementById('update-btn');
         if (!banner || !btn) return;
+        if (banner.classList.contains('show')) return; // already visible
 
         banner.classList.add('show');
 
         btn.addEventListener('click', () => {
-          // Tell the waiting SW to activate immediately
+          btn.textContent = 'Updating…';
+          btn.disabled = true;
           waitingSW.postMessage({ type: 'SKIP_WAITING' });
         }, { once: true });
       }
@@ -281,12 +283,17 @@ if ('serviceWorker' in navigator) {
       // Case 2: a new SW installs while the page is open
       reg.addEventListener('updatefound', () => {
         const newSW = reg.installing;
+        if (!newSW) return; // guard: installing can be null in some browsers
         newSW.addEventListener('statechange', () => {
           if (newSW.state === 'installed' && navigator.serviceWorker.controller) {
             offerUpdate(newSW);
           }
         });
       });
+
+      // Force an immediate update check — critical for Android PWA standalone mode
+      // (the browser may otherwise defer the check or skip it entirely on open)
+      reg.update().catch(() => {});
 
       // Case 3: once the new SW takes control, reload so users get fresh content
       let refreshing = false;
