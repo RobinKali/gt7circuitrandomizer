@@ -7,6 +7,17 @@
 const carClasses = ["Gr.1", "Gr.2", "Gr.3", "Gr.4", "Gr.B", "Road Car", "Hypercar", "GT500", "VGT", "Kart", "Electric Car"];
 const carClassesGTOnly = ["Gr.1", "Gr.2", "Gr.3", "Gr.4"];
 
+// PP classes: 0-300, then intervals of 50 up to 950-1000, then 1000+
+const carClassesPP = (function () {
+  const list = ["PP 0–300"];
+  for (let low = 301; low <= 951; low += 50) {
+    const high = low + 49;
+    list.push(`PP ${low}–${high}`);
+  }
+  list.push("PP 1000+");
+  return list;
+})();
+
 // ─── Circuit Database ────────────────────────────────────────────────────────
 const CIRCUITS = [
   { name: "Alsace", layout: "Test Course", length_km: 2.0, category: "Short", hasReverse: true },
@@ -926,12 +937,13 @@ function renderSharedSeasonView(season) {
 // ═══════════════════════════════════════════════════════════════════════════
 
 // ─── DOM References ──────────────────────────────────────────────────────────
-const carclassRollBtn   = document.getElementById('carclass-roll-btn');
-const carclassSlot      = document.getElementById('carclass-slot-display');
+const carclassRollBtn    = document.getElementById('carclass-roll-btn');
+const carclassSlot       = document.getElementById('carclass-slot-display');
 const carclassResultCard = document.getElementById('carclass-result-card');
-const carclassNameEl    = document.getElementById('carclass-name');
-const gtOnlyToggle      = document.getElementById('gt-only-toggle');
-const btnShareCarClass  = document.getElementById('btn-share-carclass');
+const carclassNameEl     = document.getElementById('carclass-name');
+const gtOnlyToggle       = document.getElementById('gt-only-toggle');
+const ppToggle           = document.getElementById('pp-toggle');
+const btnShareCarClass   = document.getElementById('btn-share-carclass');
 
 let isCarClassAnimating = false;
 let lastCarClassResult  = null;
@@ -974,7 +986,13 @@ function runCarClassSlot(finalClass, pool, slotEl) {
 carclassRollBtn.addEventListener('click', async () => {
   if (isCarClassAnimating) return;
 
-  const pool = gtOnlyToggle && gtOnlyToggle.checked ? carClassesGTOnly : carClasses;
+  // Build pool: PP-only when PP toggle is on; otherwise GT-only or full car list
+  let pool;
+  if (ppToggle && ppToggle.checked) {
+    pool = carClassesPP;
+  } else {
+    pool = gtOnlyToggle && gtOnlyToggle.checked ? carClassesGTOnly : carClasses;
+  }
   const chosen = pool[Math.floor(Math.random() * pool.length)];
 
   isCarClassAnimating = true;

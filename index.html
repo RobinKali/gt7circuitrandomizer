@@ -45,7 +45,7 @@
   <link rel="shortcut icon" href="favicon.ico" />
 
   <!-- ── Styles ──────────────────────────────────────────────────────────── -->
-  <link rel="stylesheet" href="styles.css?v=10" />
+  <link rel="stylesheet" href="styles.css?v=11" />
 
   <!-- ── Preconnect for Google Fonts (perf) ─────────────────────────────── -->
   <link rel="preconnect" href="https://fonts.googleapis.com" />
@@ -435,7 +435,7 @@
     <div id="view-carclass" class="view">
       <div class="page-wrapper">
 
-        <!-- ── GT Only Toggle ─────────────────────────────────────────── -->
+        <!-- ── Car Class Toggles ──────────────────────────────────────── -->
         <div class="options-container">
           <div class="options-row" role="group" aria-label="Car class options">
             <label class="toggle-label" for="gt-only-toggle">
@@ -444,6 +444,17 @@
               <span class="toggle-text">
                 <strong>GT Only</strong>
                 <span id="gt-only-desc">Limits pool to Gr.1, Gr.2, Gr.3 and Gr.4</span>
+              </span>
+            </label>
+          </div>
+
+          <div class="options-row" role="group" aria-label="PP range options">
+            <label class="toggle-label" for="pp-toggle">
+              <input type="checkbox" id="pp-toggle" aria-describedby="pp-desc" />
+              <span class="toggle-track" aria-hidden="true"></span>
+              <span class="toggle-text">
+                <strong>PP Range</strong>
+                <span id="pp-desc">Roll a Performance Points range (PP 0–300 up to PP 1000+)</span>
               </span>
             </label>
           </div>
@@ -498,7 +509,7 @@
   </footer>
 
   <!-- ── App Script ──────────────────────────────────────────────────────── -->
-  <script src="app.js?v=10" defer></script>
+  <script src="app.js?v=11" defer></script>
 
   <!-- ── PWA Install Prompt Handler ────────────────────────────────────── -->
   <script>
